@@ -1,8 +1,5 @@
 -- =================================================================================
 --  DATABASE SEEDING SCRIPT
---  Current Date Context: September 22, 2025
---  Description: This script populates the database with a logical set of data,
---               including past, present, and future records to simulate a real-world environment.
 -- =================================================================================
 
 
@@ -51,7 +48,7 @@ INSERT INTO Projects (id, name, start_date, end_date, description) VALUES
 --  Description: Inserts application-level configuration parameters.
 -- =================================================================================
 INSERT INTO Parameters (id, description, "value") VALUES
-                                                        (1, 'Máximo de Horas de trabalho por semana para funcionários', '40');
+    (1, 'Máximo de Horas de trabalho por semana para funcionários', '40');
 
 
 -- =================================================================================
@@ -85,16 +82,36 @@ INSERT INTO Employee_Roles (contract_Id, profile_Id) VALUES
 
 -- =================================================================================
 --  Populate Alocations Table
---  Description: Allocates employees to specific projects, ensuring consistency with project and contract timelines.
+--  Description: Allocates employees to projects based on the rule: each non-future
+--               project must have exactly 1 Manager, at least 1 DEV, and at least 1 QA.
+--               Note: Hours are illustrative to show participation.
 -- =================================================================================
 INSERT INTO Alocations (id, weekly_hours, employee_role, user_id, project_id) VALUES
--- Allocation for the completed project.
-(1, 40, 'DEV', 5, 1),    -- Gabriel Velloso on Website Institucional
--- Allocations for the ongoing SGC project.
-(2, 20, 'MANAGER', 1, 2), -- Alberto Borsatto (Manager)
-(3, 35, 'DEV', 3, 2),    -- Lucas Murakami (Dev) on SGC Project
-(4, 40, 'DEV', 5, 2),    -- Gabriel Velloso (Dev)
--- Allocations for the ongoing E-commerce project.
-(5, 40, 'QA', 2, 3),       -- Fernando Gazzana (QA) on E-commerce Project
-(6, 40, 'SECURITY', 4, 3); -- Matheus Boff (Security)
+-- Project 1: Website Institucional (Completed)
+(1, 10, 'MANAGER', 1, 1),
+(2, 40, 'DEV', 5, 1),
+(3, 10, 'QA', 2, 1),
+
+-- Project 4: Aplicativo de Logística Interna (Completed)
+(4, 10, 'MANAGER', 1, 4),
+(5, 35, 'DEV', 3, 4),
+(6, 10, 'QA', 2, 4),
+
+-- Project 2: Sistema de Gestão de Clientes (SGC) (Ongoing)
+(7, 10, 'MANAGER', 1, 2),
+(8, 35, 'DEV', 3, 2),
+(9, 40, 'DEV', 5, 2),
+(10, 10, 'QA', 2, 2),
+
+-- Project 3: Plataforma E-commerce B2B (Ongoing)
+(11, 10, 'MANAGER', 1, 3),
+(12, 20, 'DEV', 3, 3),
+(13, 20, 'QA', 2, 3),
+(14, 20, 'SECURITY', 4, 3),
+
+-- Project 5: Atualização de Segurança de Dados (LGPD) (Ongoing)
+(15, 10, 'MANAGER', 1, 5),
+(16, 20, 'DEV', 5, 5),
+(17, 20, 'QA', 2, 5),
+(18, 20, 'SECURITY', 4, 5);
 
