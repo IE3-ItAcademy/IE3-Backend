@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "Parameterses")
+@Table(name = "Parameters")
 public class Parameters {
 
     @Id
