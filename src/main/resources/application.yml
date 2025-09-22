@@ -14,6 +14,7 @@ spring:
 
   jpa:
     open-in-view: false
+    defer-datasource-initialization: true
     properties:
       hibernate:
         jdbc:
@@ -21,6 +22,9 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+    hibernate:
+      ddl-auto: create-drop
+
 error:
   handling:
     http-status-in-json-response: true
