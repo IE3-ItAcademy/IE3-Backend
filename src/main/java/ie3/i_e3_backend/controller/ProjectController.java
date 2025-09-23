@@ -1,5 +1,6 @@
 package ie3.i_e3_backend.controller;
 
+import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectDTO;
 import ie3.i_e3_backend.service.ProjectService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,6 +35,11 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(projectService.get(id));
+    }
+
+    @GetMapping("/cost/{id}")
+    public ResponseEntity<ProjectCostDTO> getProjectCost(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(projectService.getCost(id));
     }
 
     @PostMapping

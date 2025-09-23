@@ -1,12 +1,8 @@
 package ie3.i_e3_backend.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 
 @Entity
@@ -30,6 +26,10 @@ public class Employee {
     @Column(nullable = false)
     private String name;
 
+    @OneToMany
+    @JoinColumn(name = "contracts_id")
+    private List<Contract> contracts;
+
     public Long getId() {
         return id;
     }
@@ -46,4 +46,7 @@ public class Employee {
         this.name = name;
     }
 
+    public List<Contract> getContracts() { return contracts; }
+
+    public void setContracts(List<Contract> contracts) { this.contracts = contracts; }
 }

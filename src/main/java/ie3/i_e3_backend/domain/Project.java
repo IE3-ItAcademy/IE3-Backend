@@ -1,13 +1,9 @@
 package ie3.i_e3_backend.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
+import java.util.List;
 
 
 @Entity
@@ -39,6 +35,9 @@ public class Project {
 
     @Column(nullable = false)
     private String description;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Alocation> alocations;
 
     public Long getId() {
         return id;
@@ -80,4 +79,7 @@ public class Project {
         this.description = description;
     }
 
+    public List<Alocation> getAlocations() { return alocations; }
+
+    public void setAlocations(List<Alocation> alocations) { this.alocations = alocations; }
 }
