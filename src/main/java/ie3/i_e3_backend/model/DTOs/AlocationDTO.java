@@ -16,10 +16,8 @@ public class AlocationDTO {
     @NotNull
     private Role employeeRole;
 
-    @AlocationUserUnique
     private Long user;
 
-    @AlocationProjectUnique
     private Long project;
 
     public Long getId() {
