@@ -30,8 +30,8 @@ public class Alocation {
     private Role employeeRole;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Employee user;
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
@@ -61,12 +61,12 @@ public class Alocation {
         this.employeeRole = employeeRole;
     }
 
-    public Employee getUser() {
-        return user;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setUser(final Employee user) {
-        this.user = user;
+    public void setEmployee(final Employee user) {
+        this.employee = user;
     }
 
     public Project getProject() {

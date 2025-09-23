@@ -86,7 +86,7 @@ INSERT INTO Employee_Roles (contract_Id, profile_Id) VALUES
 --               project must have exactly 1 Manager, at least 1 DEV, and at least 1 QA.
 --               Note: Hours are illustrative to show participation.
 -- =================================================================================
-INSERT INTO Alocations (id, weekly_hours, employee_role, user_id, project_id) VALUES
+INSERT INTO Alocations (id, weekly_hours, employee_role, employee_id, project_id) VALUES
 -- Project 1: Website Institucional (Completed)
 (1, 10, 'MANAGER', 1, 1),
 (2, 40, 'DEV', 5, 1),

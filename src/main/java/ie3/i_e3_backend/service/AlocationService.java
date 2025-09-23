@@ -4,6 +4,7 @@ import ie3.i_e3_backend.domain.Alocation;
 import ie3.i_e3_backend.domain.Employee;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.AlocationDTO;
+import ie3.i_e3_backend.model.Enums.Role;
 import ie3.i_e3_backend.repos.AlocationRepository;
 import ie3.i_e3_backend.repos.EmployeeRepository;
 import ie3.i_e3_backend.repos.ProjectRepository;
@@ -52,7 +53,7 @@ public class AlocationService {
         alocationDTO.setId(alocation.getId());
         alocationDTO.setWeeklyHours(alocation.getWeeklyHours());
         alocationDTO.setEmployeeRole(alocation.getEmployeeRole());
-        alocationDTO.setUser(alocation.getUser() == null ? null : alocation.getUser().getId());
+        alocationDTO.setUser(alocation.getEmployee() == null ? null : alocation.getEmployee().getId());
         alocationDTO.setProject(alocation.getProject() == null ? null : alocation.getProject().getId());
         return alocationDTO;
     }
@@ -62,19 +63,12 @@ public class AlocationService {
         alocation.setEmployeeRole(alocationDTO.getEmployeeRole());
         final Employee user = alocationDTO.getUser() == null ? null : employeeRepository.findById(alocationDTO.getUser())
                 .orElseThrow(() -> new NotFoundException("user not found"));
-        alocation.setUser(user);
+        alocation.setEmployee(user);
         final Project project = alocationDTO.getProject() == null ? null : projectRepository.findById(alocationDTO.getProject())
                 .orElseThrow(() -> new NotFoundException("project not found"));
         alocation.setProject(project);
         return alocation;
     }
 
-    public boolean userExists(final Long id) {
-        return alocationRepository.existsByUserId(id);
-    }
-
-    public boolean projectExists(final Long id) {
-        return alocationRepository.existsByProjectId(id);
-    }
-
+    public boolean managerExistsByProjectId(final Long managerId,  final Long projectId) {return alocationRepository.existsByProjectIdAndEmployeeRole(projectId, Role.MANAGER);}
 }

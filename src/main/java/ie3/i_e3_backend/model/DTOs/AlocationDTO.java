@@ -1,7 +1,5 @@
 package ie3.i_e3_backend.model.DTOs;
 
-import ie3.i_e3_backend.model.AlocationProjectUnique;
-import ie3.i_e3_backend.model.AlocationUserUnique;
 import ie3.i_e3_backend.model.Enums.Role;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,10 +14,8 @@ public class AlocationDTO {
     @NotNull
     private Role employeeRole;
 
-    @AlocationUserUnique
     private Long user;
 
-    @AlocationProjectUnique
     private Long project;
 
     public Long getId() {
