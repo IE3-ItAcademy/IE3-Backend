@@ -5,10 +5,7 @@ import ie3.i_e3_backend.domain.Employee;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.AlocationDTO;
 import ie3.i_e3_backend.model.Enums.Role;
-import ie3.i_e3_backend.repos.AlocationRepository;
-import ie3.i_e3_backend.repos.EmployeeRepository;
-import ie3.i_e3_backend.repos.ParametersRepository;
-import ie3.i_e3_backend.repos.ProjectRepository;
+import ie3.i_e3_backend.repos.*;
 import ie3.i_e3_backend.util.NotFoundException;
 import ie3.i_e3_backend.util.OverAlocationException;
 import org.springframework.data.domain.Sort;
@@ -17,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
@@ -28,15 +27,17 @@ public class AlocationService {
     private final EmployeeRepository employeeRepository;
     private final ProjectRepository projectRepository;
     private final ParametersRepository parametersRepository;
+    private final ContractRepository contractRepository;
 
     public AlocationService(final AlocationRepository alocationRepository,
                             final EmployeeRepository employeeRepository,
                             final ProjectRepository projectRepository,
-                            final ParametersRepository parametersRepository) {
+                            final ParametersRepository parametersRepository, ContractRepository contractRepository) {
         this.alocationRepository = alocationRepository;
         this.employeeRepository = employeeRepository;
         this.projectRepository = projectRepository;
         this.parametersRepository = parametersRepository;
+        this.contractRepository = contractRepository;
     }
 
     public List<AlocationDTO> findAll() {
@@ -57,9 +58,26 @@ public class AlocationService {
         final Alocation alocation = new Alocation();
         mapToEntity(alocationDTO, alocation);
 
+        validateEmployeeRole(alocation);
         validateNoOverAllocation(alocation);
 
         return alocationRepository.save(alocation).getId();
+    }
+
+    private void validateEmployeeRole(final Alocation newAlocation) {
+        var currentContract = contractRepository.findTopActiveContractByEmployeeId(
+                newAlocation.getEmployee().getId(),
+                OffsetDateTime.now()
+        ).stream().findFirst().orElse(null);
+
+        if (currentContract == null) {
+            throw new NotFoundException("Active contract not found for employee");
+        }
+
+        if (currentContract.getProfile().stream()
+                .noneMatch(profile -> profile.getRole().equals(newAlocation.getEmployeeRole()))) {
+            throw new NotFoundException("Employee role not found in active contract");
+        }
     }
 
     private void validateNoOverAllocation(final Alocation newAlocation) {
