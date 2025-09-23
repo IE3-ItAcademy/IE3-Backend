@@ -113,7 +113,6 @@ public class AlocationService {
             if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
                 workingDaysInWeek++;
             }
-            workingDaysInWeek++;
             currentDate = currentDate.plusDays(1);
         }
 
