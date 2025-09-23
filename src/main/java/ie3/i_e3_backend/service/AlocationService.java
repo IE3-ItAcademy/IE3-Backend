@@ -123,7 +123,7 @@ public class AlocationService {
         alocationDTO.setId(alocation.getId());
         alocationDTO.setWeeklyHours(alocation.getWeeklyHours());
         alocationDTO.setEmployeeRole(alocation.getEmployeeRole());
-        alocationDTO.setUser(alocation.getEmployee() == null ? null : alocation.getEmployee().getId());
+        alocationDTO.setEmployee(alocation.getEmployee() == null ? null : alocation.getEmployee().getId());
         alocationDTO.setProject(alocation.getProject() == null ? null : alocation.getProject().getId());
         return alocationDTO;
     }
@@ -131,7 +131,7 @@ public class AlocationService {
     private Alocation mapToEntity(final AlocationDTO alocationDTO, final Alocation alocation) {
         alocation.setWeeklyHours(alocationDTO.getWeeklyHours());
         alocation.setEmployeeRole(alocationDTO.getEmployeeRole());
-        final Employee user = alocationDTO.getUser() == null ? null : employeeRepository.findById(alocationDTO.getUser())
+        final Employee user = alocationDTO.getEmployee() == null ? null : employeeRepository.findById(alocationDTO.getEmployee())
                 .orElseThrow(() -> new NotFoundException("user not found"));
         alocation.setEmployee(user);
         final Project project = alocationDTO.getProject() == null ? null : projectRepository.findById(alocationDTO.getProject())
