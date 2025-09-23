@@ -14,7 +14,7 @@ public class AlocationDTO {
     @NotNull
     private Role employeeRole;
 
-    private Long user;
+    private Long employee;
 
     private Long project;
 
@@ -42,12 +42,12 @@ public class AlocationDTO {
         this.employeeRole = employeeRole;
     }
 
-    public Long getUser() {
-        return user;
+    public Long getEmployee() {
+        return employee;
     }
 
-    public void setUser(final Long user) {
-        this.user = user;
+    public void setEmployee(final Long employee) {
+        this.employee = employee;
     }
 
     public Long getProject() {
