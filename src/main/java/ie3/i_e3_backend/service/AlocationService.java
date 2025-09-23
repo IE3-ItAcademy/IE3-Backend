@@ -89,6 +89,9 @@ public class AlocationService {
         }
     }
 
+    /*
+        By default, it only counts the working days, excluding MONDAY and SUNDAY.
+     */
     private double getProratedHoursForWeek(Alocation allocation, LocalDate dateInWeek) {
         LocalDate projectStart = allocation.getProject().getStartDate().toLocalDate();
         LocalDate projectEnd = allocation.getProject().getEndDate().toLocalDate();
@@ -107,15 +110,14 @@ public class AlocationService {
         LocalDate currentDate = effectiveStart;
         while (!currentDate.isAfter(effectiveEnd)) {
             DayOfWeek day = currentDate.getDayOfWeek();
-//            if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
-//                workingDaysInWeek++;
-//            }
+            if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
+                workingDaysInWeek++;
+            }
             workingDaysInWeek++;
             currentDate = currentDate.plusDays(1);
         }
 
-//        5.0 uncomment above to only work days.
-        double hoursPerDay = allocation.getWeeklyHours() / 7.0;
+        double hoursPerDay = allocation.getWeeklyHours() / 5.0;
         return hoursPerDay * workingDaysInWeek;
     }
 
