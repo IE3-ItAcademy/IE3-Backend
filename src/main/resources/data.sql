@@ -39,7 +39,7 @@ INSERT INTO Projects (id, name, start_date, end_date, description) VALUES
 (3, 'Plataforma E-commerce B2B', '2024-09-15 09:00:00-03', '2025-12-20 18:00:00-03', 'Criação de um portal de vendas online focado no mercado business-to-business.'),
 (5, 'Atualização de Segurança de Dados (LGPD)', '2025-05-10 09:00:00-03', '2026-02-20 18:00:00-03', 'Projeto para adequar todos os sistemas da empresa à Lei Geral de Proteção de Dados.'),
 -- Future Projects
-(6, 'Migração para Nuvem AWS', '2026-01-10 09:00:00-03', '2026-06-30 18:00:00-03', 'Migração completa da infraestrutura on-premise para a nuvem da Amazon Web Services.'),
+(6, 'Migração para Nuvem AWS', '2027-01-10 09:00:00-03', '2028-06-30 18:00:00-03', 'Migração completa da infraestrutura on-premise para a nuvem da Amazon Web Services.'),
 (7, 'Dashboard de Business Intelligence (BI)', '2026-03-01 09:00:00-03', '2026-09-30 18:00:00-03', 'Criação de painéis de BI para análise de dados de vendas e operações em tempo real.');
 
 
@@ -86,7 +86,7 @@ INSERT INTO Employee_Roles (contract_Id, profile_Id) VALUES
 --               project must have exactly 1 Manager, at least 1 DEV, and at least 1 QA.
 --               Note: Hours are illustrative to show participation.
 -- =================================================================================
-INSERT INTO Alocations (id, weekly_hours, employee_role, user_id, project_id) VALUES
+INSERT INTO Alocations (id, weekly_hours, employee_role, employee_id, project_id) VALUES
 -- Project 1: Website Institucional (Completed)
 (1, 10, 'MANAGER', 1, 1),
 (2, 40, 'DEV', 5, 1),
