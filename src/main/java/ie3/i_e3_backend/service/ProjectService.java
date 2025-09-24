@@ -165,7 +165,7 @@ public class ProjectService {
         return totalCost;
     }
 
-    private ProjectStatus getProjectStatus(Project project) {
+    public ProjectStatus getProjectStatus(Project project) {
         OffsetDateTime now = OffsetDateTime.now();
 
         if (project.getEndDate().isBefore(now)) {

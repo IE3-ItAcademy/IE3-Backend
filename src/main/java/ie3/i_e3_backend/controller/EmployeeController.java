@@ -1,6 +1,7 @@
 package ie3.i_e3_backend.controller;
 
 import ie3.i_e3_backend.model.DTOs.EmployeeDTO;
+import ie3.i_e3_backend.model.DTOs.EmployeeModalDTO;
 import ie3.i_e3_backend.service.EmployeeService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -34,6 +35,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(employeeService.get(id));
+    }
+
+    @GetMapping("/details/{id}")
+    public ResponseEntity<EmployeeModalDTO> getEmployeeDetails(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(employeeService.getEmployeeDetails(id));
     }
 
     @PostMapping
