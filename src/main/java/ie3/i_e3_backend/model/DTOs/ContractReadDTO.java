@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 
-public class ContractDTO {
+public class ContractReadDTO {
 
     private Long id;
 
@@ -23,6 +23,9 @@ public class ContractDTO {
 
     @NotNull
     private Long employeeId;
+
+    @NotNull
+    private String employeeName;
 
     private List<Long> profile;
 
@@ -64,6 +67,14 @@ public class ContractDTO {
 
     public void setWageByHour(final Double wageByHour) {
         this.wageByHour = wageByHour;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(final String employeeName) {
+        this.employeeName = employeeName;
     }
 
     public Long getEmployeeId() { return employeeId; }

@@ -1,6 +1,7 @@
 package ie3.i_e3_backend.controller;
 
 import ie3.i_e3_backend.model.DTOs.ContractDTO;
+import ie3.i_e3_backend.model.DTOs.ContractReadDTO;
 import ie3.i_e3_backend.service.ContractService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -27,12 +28,12 @@ public class ContractController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ContractDTO>> getAllContracts() {
+    public ResponseEntity<List<ContractReadDTO>> getAllContracts() {
         return ResponseEntity.ok(contractService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContractDTO> getContract(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<ContractReadDTO> getContract(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(contractService.get(id));
     }
 
