@@ -5,6 +5,7 @@ import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Employee;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.AlocationDTO;
+import ie3.i_e3_backend.model.DTOs.AlocationReadDTO;
 import ie3.i_e3_backend.model.Enums.Role;
 import ie3.i_e3_backend.repos.*;
 import ie3.i_e3_backend.util.ExistentManagerException;
@@ -44,17 +45,17 @@ public class AlocationService {
     }
 
     @Transactional(readOnly = true)
-    public List<AlocationDTO> findAll() {
+    public List<AlocationReadDTO> findAll() {
         final List<Alocation> alocations = alocationRepository.findAll(Sort.by("id"));
         return alocations.stream()
-                .map(alocation -> mapToDTO(alocation, new AlocationDTO()))
+                .map(alocation -> mapToDTO(alocation, new AlocationReadDTO()))
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public AlocationDTO get(final Long id) {
+    public AlocationReadDTO get(final Long id) {
         return alocationRepository.findById(id)
-                .map(alocation -> mapToDTO(alocation, new AlocationDTO()))
+                .map(alocation -> mapToDTO(alocation, new AlocationReadDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
@@ -167,15 +168,15 @@ public class AlocationService {
         return hoursPerDay * workingDaysInWeek;
     }
 
-    private AlocationDTO mapToDTO(final Alocation alocation, final AlocationDTO alocationDTO) {
-        alocationDTO.setId(alocation.getId());
-        alocationDTO.setWeeklyHours(alocation.getWeeklyHours());
-        alocationDTO.setEmployeeRole(alocation.getEmployeeRole());
-        alocationDTO.setEmployee(alocation.getEmployee() == null ? null : alocation.getEmployee().getId());
-        alocationDTO.setEmployeeName(alocation.getEmployee().getName());
-        alocationDTO.setProject(alocation.getProject() == null ? null : alocation.getProject().getId());
-        alocationDTO.setProjectName(alocation.getProject().getName());
-        return alocationDTO;
+    private AlocationReadDTO mapToDTO(final Alocation alocation, final AlocationReadDTO alocationReadDTO) {
+        alocationReadDTO.setId(alocation.getId());
+        alocationReadDTO.setWeeklyHours(alocation.getWeeklyHours());
+        alocationReadDTO.setEmployeeRole(alocation.getEmployeeRole());
+        alocationReadDTO.setEmployee(alocation.getEmployee() == null ? null : alocation.getEmployee().getId());
+        alocationReadDTO.setEmployeeName(alocation.getEmployee().getName());
+        alocationReadDTO.setProject(alocation.getProject() == null ? null : alocation.getProject().getId());
+        alocationReadDTO.setProjectName(alocation.getProject().getName());
+        return alocationReadDTO;
     }
 
     private Alocation mapToEntity(final AlocationDTO alocationDTO, final Alocation alocation) {
