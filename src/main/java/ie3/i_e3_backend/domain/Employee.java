@@ -30,6 +30,9 @@ public class Employee {
     @JoinColumn(name = "contracts_id")
     private List<Contract> contracts;
 
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Alocation> alocations;
+
     public Long getId() {
         return id;
     }
@@ -49,4 +52,8 @@ public class Employee {
     public List<Contract> getContracts() { return contracts; }
 
     public void setContracts(List<Contract> contracts) { this.contracts = contracts; }
+
+    public List<Alocation> getAlocations() { return alocations; }
+
+    public void setAlocations(List<Alocation> alocations) { this.alocations = alocations; }
 }
