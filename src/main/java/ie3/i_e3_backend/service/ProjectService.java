@@ -3,10 +3,7 @@ package ie3.i_e3_backend.service;
 import ie3.i_e3_backend.domain.Alocation;
 import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Project;
-import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
-import ie3.i_e3_backend.model.DTOs.ProjectDTO;
-import ie3.i_e3_backend.model.DTOs.ProjectModalDTO;
-import ie3.i_e3_backend.model.DTOs.ProjectReadDTO;
+import ie3.i_e3_backend.model.DTOs.*;
 import ie3.i_e3_backend.model.Enums.ProjectStatus;
 import ie3.i_e3_backend.model.Enums.Role;
 import ie3.i_e3_backend.repos.AlocationRepository;
@@ -42,6 +39,11 @@ public class ProjectService {
         return projects.stream()
                 .map(project -> mapToDTO(project, new ProjectReadDTO()))
                 .toList();
+    }
+
+    public ProjectCountStatusDTO countByStatus() {
+        final List<Project> projects = projectRepository.findAll(Sort.by("id"));
+        return getProjectCountStatus(projects);
     }
 
     public ProjectReadDTO get(final Long id) {
@@ -182,6 +184,42 @@ public class ProjectService {
         Set<Role> roleSet = new HashSet<>(projectRoles);
 
         return roleSet.containsAll(List.of(Role.DEV, Role.QA, Role.MANAGER));
+    }
+
+    private ProjectCountStatusDTO getProjectCountStatus(List<Project> projects) {
+        ProjectCountStatusDTO projectCountStatusDTO = new ProjectCountStatusDTO();
+
+        int completed = 0;
+        int available = 0;
+        int planned = 0;
+        int unavailable = 0;
+
+        for (Project project : projects) {
+            ProjectStatus status = getProjectStatus(project);
+
+            switch (status) {
+                case COMPLETED:
+                    completed++;
+                    break;
+                case AVAILABLE:
+                    available++;
+                    break;
+                case PLANNED:
+                    planned++;
+                    break;
+                case UNAVAILABLE:
+                    unavailable++;
+                    break;
+            }
+        }
+
+        projectCountStatusDTO.setTotalProjectCount(projects.size());
+        projectCountStatusDTO.setCompletedProjectCount(completed);
+        projectCountStatusDTO.setAvailableProjectCount(available);
+        projectCountStatusDTO.setPlannedProjectCount(planned);
+        projectCountStatusDTO.setUnavailableProjectCount(unavailable);
+
+        return projectCountStatusDTO;
     }
 
     private ProjectReadDTO mapToDTO(final Project project, final ProjectReadDTO projectReadDTO) {

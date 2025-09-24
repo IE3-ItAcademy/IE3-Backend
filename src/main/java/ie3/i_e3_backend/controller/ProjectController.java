@@ -1,21 +1,17 @@
 package ie3.i_e3_backend.controller;
 
-import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
-import ie3.i_e3_backend.model.DTOs.ProjectDTO;
-import ie3.i_e3_backend.model.DTOs.ProjectModalDTO;
-import ie3.i_e3_backend.model.DTOs.ProjectReadDTO;
+import ie3.i_e3_backend.model.DTOs.*;
 import ie3.i_e3_backend.service.ProjectService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-
-import java.time.OffsetDateTime;
-import java.util.List;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.OffsetDateTime;
+import java.util.List;
 
 
 @RestController
@@ -32,6 +28,9 @@ public class ProjectController {
     public ResponseEntity<List<ProjectReadDTO>> getAllProjects() {
         return ResponseEntity.ok(projectService.findAll());
     }
+
+    @GetMapping("/countByStatus")
+    public ResponseEntity<ProjectCountStatusDTO> getAllProjectsByStatus() {return ResponseEntity.ok(projectService.countByStatus()); }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectReadDTO> getProject(@PathVariable(name = "id") final Long id) {
