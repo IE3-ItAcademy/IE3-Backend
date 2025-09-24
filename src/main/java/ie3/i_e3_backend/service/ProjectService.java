@@ -5,6 +5,10 @@ import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectDTO;
+import ie3.i_e3_backend.model.DTOs.ProjectReadDTO;
+import ie3.i_e3_backend.model.Enums.ProjectStatus;
+import ie3.i_e3_backend.model.Enums.Role;
+import ie3.i_e3_backend.repos.AlocationRepository;
 import ie3.i_e3_backend.repos.ContractRepository;
 import ie3.i_e3_backend.repos.ProjectRepository;
 import ie3.i_e3_backend.util.NotFoundException;
@@ -17,8 +21,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -27,22 +30,24 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ContractRepository contractRepository;
+    private final AlocationRepository alocationRepository;
 
-    public ProjectService(final ProjectRepository projectRepository, final ContractRepository contractRepository) {
+    public ProjectService(final ProjectRepository projectRepository, final ContractRepository contractRepository, final AlocationRepository alocationRepository) {
         this.projectRepository = projectRepository;
         this.contractRepository = contractRepository;
+        this.alocationRepository = alocationRepository;
     }
 
-    public List<ProjectDTO> findAll() {
+    public List<ProjectReadDTO> findAll() {
         final List<Project> projects = projectRepository.findAll(Sort.by("id"));
         return projects.stream()
-                .map(project -> mapToDTO(project, new ProjectDTO()))
+                .map(project -> mapToDTO(project, new ProjectReadDTO()))
                 .toList();
     }
 
-    public ProjectDTO get(final Long id) {
+    public ProjectReadDTO get(final Long id) {
         return projectRepository.findById(id)
-                .map(project -> mapToDTO(project, new ProjectDTO()))
+                .map(project -> mapToDTO(project, new ProjectReadDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
@@ -147,13 +152,35 @@ public class ProjectService {
         return hoursPerDay * workingDays;
     }
 
-    private ProjectDTO mapToDTO(final Project project, final ProjectDTO projectDTO) {
-        projectDTO.setId(project.getId());
-        projectDTO.setName(project.getName());
-        projectDTO.setStartDate(project.getStartDate());
-        projectDTO.setEndDate(project.getEndDate());
-        projectDTO.setDescription(project.getDescription());
-        return projectDTO;
+    private ProjectStatus getProjectStatus(Project project) {
+        OffsetDateTime now = OffsetDateTime.now();
+
+        if (project.getEndDate().isBefore(now)) {
+            return ProjectStatus.COMPLETED;
+        } else if (project.getStartDate().isAfter(now)) {
+            return ProjectStatus.PLANNED;
+        } else if (checkProjectRoles(project.getId())) {
+            return ProjectStatus.AVAILABLE;
+        }
+
+        return ProjectStatus.UNAVAILABLE;
+    }
+
+    private boolean checkProjectRoles(Long projectId) {
+        List<Role> projectRoles = alocationRepository.findRolesByProjectId(projectId);
+        Set<Role> roleSet = new HashSet<>(projectRoles);
+
+        return roleSet.containsAll(List.of(Role.DEV, Role.SECURITY, Role.QA, Role.MANAGER));
+    }
+
+    private ProjectReadDTO mapToDTO(final Project project, final ProjectReadDTO projectReadDTO) {
+        projectReadDTO.setId(project.getId());
+        projectReadDTO.setName(project.getName());
+        projectReadDTO.setStartDate(project.getStartDate());
+        projectReadDTO.setEndDate(project.getEndDate());
+        projectReadDTO.setDescription(project.getDescription());
+        projectReadDTO.setStatus(getProjectStatus(project));
+        return projectReadDTO;
     }
 
     private Project mapToEntity(final ProjectDTO projectDTO, final Project project) {
