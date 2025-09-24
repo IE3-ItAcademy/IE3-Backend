@@ -181,7 +181,7 @@ public class ProjectService {
         List<Role> projectRoles = alocationRepository.findRolesByProjectId(projectId);
         Set<Role> roleSet = new HashSet<>(projectRoles);
 
-        return roleSet.containsAll(List.of(Role.DEV, Role.SECURITY, Role.QA, Role.MANAGER));
+        return roleSet.containsAll(List.of(Role.DEV, Role.QA, Role.MANAGER));
     }
 
     private ProjectReadDTO mapToDTO(final Project project, final ProjectReadDTO projectReadDTO) {
