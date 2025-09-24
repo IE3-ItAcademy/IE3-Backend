@@ -1,11 +1,14 @@
 package ie3.i_e3_backend.service;
 
 import ie3.i_e3_backend.domain.Alocation;
+import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Employee;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.AlocationDTO;
 import ie3.i_e3_backend.model.Enums.Role;
 import ie3.i_e3_backend.repos.*;
+import ie3.i_e3_backend.util.ExistentManagerException;
+import ie3.i_e3_backend.util.InvalidProjectException;
 import ie3.i_e3_backend.util.NotFoundException;
 import ie3.i_e3_backend.util.OverAlocationException;
 import org.springframework.data.domain.Sort;
@@ -57,26 +60,50 @@ public class AlocationService {
     public Long create(final AlocationDTO alocationDTO) {
         final Alocation alocation = new Alocation();
         mapToEntity(alocationDTO, alocation);
+        final Long projectId = alocation.getProject().getId();
 
+        validateProjectDate(projectId);
         validateEmployeeRole(alocation);
         validateNoOverAllocation(alocation);
+        if (alocation.getEmployeeRole().equals(Role.MANAGER)) validateProjectManager(projectId);
 
         return alocationRepository.save(alocation).getId();
     }
 
     private void validateEmployeeRole(final Alocation newAlocation) {
-        var currentContract = contractRepository.findTopActiveContractByEmployeeId(
-                newAlocation.getEmployee().getId(),
-                OffsetDateTime.now()
-        ).stream().findFirst().orElse(null);
+        Long employeeId = newAlocation.getEmployee().getId();
+        OffsetDateTime now = OffsetDateTime.now();
+
+        var currentContract = contractRepository.findTopActiveContractByEmployeeId(employeeId, now)
+                .stream().findFirst().orElse(null);
 
         if (currentContract == null) {
             throw new NotFoundException("Active contract not found for employee");
         }
 
-        if (currentContract.getProfile().stream()
-                .noneMatch(profile -> profile.getRole().equals(newAlocation.getEmployeeRole()))) {
+        boolean roleExists = currentContract.getProfile().stream()
+                .anyMatch(profile -> profile.getRole().equals(newAlocation.getEmployeeRole()));
+
+        if (!roleExists) {
             throw new NotFoundException("Employee role not found in active contract");
+        }
+    }
+
+    private void validateProjectDate(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Project not found"));
+
+        if (project.getEndDate().isBefore(OffsetDateTime.now())) {
+            throw new InvalidProjectException(projectId);
+        }
+    }
+
+    private void validateProjectManager(Long projectId) {
+        boolean hasManager = alocationRepository.findByProjectId(projectId).stream()
+                .anyMatch(alocation -> alocation.getEmployeeRole().equals(Role.MANAGER));
+
+        if (hasManager) {
+            throw new ExistentManagerException(projectId);
         }
     }
 

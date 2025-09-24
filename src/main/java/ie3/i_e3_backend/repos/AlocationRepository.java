@@ -24,4 +24,6 @@ public interface AlocationRepository extends JpaRepository<Alocation, Long> {
             @Param("newProjectStartDate") OffsetDateTime newProjectStartDate,
             @Param("newProjectEndDate") OffsetDateTime newProjectEndDate
     );
+
+    List<Alocation> findByProjectId(Long projectId);
 }
