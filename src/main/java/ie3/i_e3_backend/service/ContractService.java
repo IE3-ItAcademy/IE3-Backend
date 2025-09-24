@@ -53,6 +53,7 @@ public class ContractService {
 
     private ContractDTO mapToDTO(final Contract contract, final ContractDTO contractDTO) {
         contractDTO.setId(contract.getId());
+        contractDTO.setEmployeeName(contract.getEmployee().getName());
         contractDTO.setStartDate(contract.getStartDate());
         contractDTO.setEndDate(contract.getEndDate());
         contractDTO.setWeeklyHours(contract.getWeeklyHours());
