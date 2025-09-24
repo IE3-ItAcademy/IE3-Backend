@@ -48,8 +48,8 @@ public class Contract {
     private Double wageByHour;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id", nullable = false)
-    private Employee users;
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 
     @ManyToMany
     @JoinTable(
@@ -99,12 +99,12 @@ public class Contract {
         this.wageByHour = wageByHour;
     }
 
-    public Employee getUsers() {
-        return users;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setUsers(final Employee users) {
-        this.users = users;
+    public void setEmployee(final Employee employee) {
+        this.employee = employee;
     }
 
     public Set<Profile> getProfile() {

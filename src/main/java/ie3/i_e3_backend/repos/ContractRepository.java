@@ -13,12 +13,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
 
-    Contract findFirstByUsersId(Long id);
-
     List<Contract> findAllByProfileId(Long id);
 
     @Query("SELECT c FROM Contract c " +
-            "WHERE c.users.id = :employeeId " +
+            "WHERE c.employee.id = :employeeId " +
             "AND :now BETWEEN c.startDate AND c.endDate " +
             "ORDER BY c.startDate DESC")
     Optional<Contract> findTopActiveContractByEmployeeId(@Param("employeeId") Long employeeId, @Param("now") OffsetDateTime now);

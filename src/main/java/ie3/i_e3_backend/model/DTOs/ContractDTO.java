@@ -22,7 +22,10 @@ public class ContractDTO {
     private Double wageByHour;
 
     @NotNull
-    private Long users;
+    private Long employeeId;
+
+    @NotNull
+    private String employeeName;
 
     private List<Long> profile;
 
@@ -66,13 +69,17 @@ public class ContractDTO {
         this.wageByHour = wageByHour;
     }
 
-    public Long getUsers() {
-        return users;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setUsers(final Long users) {
-        this.users = users;
+    public void setEmployeeName(final String employeeName) {
+        this.employeeName = employeeName;
     }
+
+    public Long getEmployeeId() { return employeeId; }
+
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
 
     public List<Long> getProfile() {
         return profile;
