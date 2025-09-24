@@ -53,15 +53,42 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public ProjectCostDTO getCost(final Long id) {
+    public ProjectCostDTO getCost(final Long id, OffsetDateTime startDate, OffsetDateTime endDate) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+
         ProjectCostDTO projectCostDTO = new ProjectCostDTO();
         projectCostDTO.setTotalCost(totalProjectCost(id));
+
+        if (startDate != null && endDate != null) {
+            projectCostDTO.setTotalCostPerPeriod(periodTotalCost(id, startDate, endDate));
+        } else {
+            projectCostDTO.setTotalCostPerPeriod(periodTotalCost(id, project.getStartDate(), project.getEndDate()));
+        }
 
         return projectCostDTO;
     }
 
+    private double totalProjectCost(final Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(NotFoundException::new);
+
+        return project.getAlocations().stream()
+                .mapToDouble(alocation -> calculateAlocationCostForPeriod(alocation, project.getStartDate(), project.getEndDate()))
+                .sum();
+    }
+
+    private double periodTotalCost(final Long projectId, OffsetDateTime periodStart, OffsetDateTime periodEnd) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(NotFoundException::new);
+
+        return project.getAlocations().stream()
+                .mapToDouble(alocation -> calculateAlocationCostForPeriod(alocation, periodStart, periodEnd))
+                .sum();
+    }
+
     /*
-        Total Project Cost =
+        Project Cost =
         For each Allocation:
             - Determine the employee's active contract for each week of the project.
             - Calculate the number of business days (Mon–Fri) in that week where both:
@@ -71,45 +98,41 @@ public class ProjectService {
             - Multiply the prorated hours by the wage per hour from the contract.
         Sum all weekly costs across all allocations to get the final project cost.
     */
-    private double totalProjectCost(final Long projectId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(NotFoundException::new);
-
+    private double calculateAlocationCostForPeriod(
+            Alocation alocation,
+            OffsetDateTime periodStart,
+            OffsetDateTime periodEnd
+    ) {
         double totalCost = 0;
+        LocalDate currentWeek = periodStart.toLocalDate();
 
-        for (Alocation alocation : project.getAlocations()) {
-            LocalDate currentWeek = project.getStartDate().toLocalDate();
+        while (!currentWeek.isAfter(periodEnd.toLocalDate())) {
+            OffsetDateTime weekReferenceDate = currentWeek.atStartOfDay().atOffset(ZoneOffset.UTC);
 
-            while (!currentWeek.isAfter(project.getEndDate().toLocalDate())) {
-                OffsetDateTime weekReferenceDate = currentWeek.atStartOfDay().atOffset(ZoneOffset.UTC);
+            Optional<Contract> contractOpt = contractRepository.findTopActiveContractByEmployeeId(
+                    alocation.getEmployee().getId(),
+                    weekReferenceDate
+            );
 
-                Optional<Contract> contractOpt = contractRepository.findTopActiveContractByEmployeeId(
-                        alocation.getEmployee().getId(),
-                        weekReferenceDate
-                );
-
-                if (contractOpt.isEmpty()) {
-                    currentWeek = currentWeek.plusWeeks(1);
-                    continue; // No active contract for this week
-                }
-
-                Contract contract = contractOpt.get();
-                double wageByHour = contract.getWageByHour();
-
-                double proratedHours = getProratedHoursForWeek(
-                        project.getStartDate().toLocalDate(),
-                        project.getEndDate().toLocalDate(),
-                        currentWeek,
-                        alocation.getWeeklyHours(),
-                        contract.getStartDate().toLocalDate(),
-                        contract.getEndDate().toLocalDate()
-                );
-
-                double weeklyCost = wageByHour * proratedHours;
-                totalCost += weeklyCost;
-
+            if (contractOpt.isEmpty()) {
                 currentWeek = currentWeek.plusWeeks(1);
+                continue;
             }
+
+            Contract contract = contractOpt.get();
+            double wageByHour = contract.getWageByHour();
+
+            double proratedHours = getProratedHoursForWeek(
+                    periodStart.toLocalDate(),
+                    periodEnd.toLocalDate(),
+                    currentWeek,
+                    alocation.getWeeklyHours(),
+                    contract.getStartDate().toLocalDate(),
+                    contract.getEndDate().toLocalDate()
+            );
+
+            totalCost += wageByHour * proratedHours;
+            currentWeek = currentWeek.plusWeeks(1);
         }
 
         return totalCost;

@@ -5,6 +5,8 @@ import ie3.i_e3_backend.model.DTOs.ProjectDTO;
 import ie3.i_e3_backend.service.ProjectService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,8 +40,8 @@ public class ProjectController {
     }
 
     @GetMapping("/cost/{id}")
-    public ResponseEntity<ProjectCostDTO> getProjectCost(@PathVariable(name = "id") final Long id) {
-        return ResponseEntity.ok(projectService.getCost(id));
+    public ResponseEntity<ProjectCostDTO> getProjectCost(@PathVariable(name = "id") final Long id, @PathVariable final OffsetDateTime startDate, @PathVariable final OffsetDateTime endDate) {
+        return ResponseEntity.ok(projectService.getCost(id, startDate, endDate));
     }
 
     @PostMapping
