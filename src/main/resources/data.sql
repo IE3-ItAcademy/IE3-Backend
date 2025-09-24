@@ -55,7 +55,7 @@ INSERT INTO Parameters (id, description, "value") VALUES
 --  Populate Contracts Table
 --  Description: Links employees to contracts, including past and present agreements.
 -- =================================================================================
-INSERT INTO Contracts (id, start_date, end_date, weekly_hours, wage_by_hour, users_id) VALUES
+INSERT INTO Contracts (id, start_date, end_date, weekly_hours, wage_by_hour, employee_id) VALUES
 -- Active Contracts for current employees
 (1, '2024-03-10 09:00:00-03', '2026-03-09 18:00:00-03', 40, 95.50, 1), -- Alberto Borsatto (Manager)
 (2, '2024-05-20 09:00:00-03', '2026-05-19 18:00:00-03', 40, 82.00, 2), -- Fernando Gazzana (QA)

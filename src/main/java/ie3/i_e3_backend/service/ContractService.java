@@ -57,7 +57,8 @@ public class ContractService {
         contractDTO.setEndDate(contract.getEndDate());
         contractDTO.setWeeklyHours(contract.getWeeklyHours());
         contractDTO.setWageByHour(contract.getWageByHour());
-        contractDTO.setUsers(contract.getUsers() == null ? null : contract.getUsers().getId());
+        contractDTO.setEmployeeName(contract.getEmployee().getName());
+        contractDTO.setEmployeeId(contract.getEmployee().getId());
         contractDTO.setProfile(contract.getProfile().stream()
                 .map(profile -> profile.getId())
                 .toList());
@@ -69,9 +70,9 @@ public class ContractService {
         contract.setEndDate(contractDTO.getEndDate());
         contract.setWeeklyHours(contractDTO.getWeeklyHours());
         contract.setWageByHour(contractDTO.getWageByHour());
-        final Employee users = contractDTO.getUsers() == null ? null : employeeRepository.findById(contractDTO.getUsers())
+        final Employee employee = contractDTO.getEmployeeId() == null ? null : employeeRepository.findById(contractDTO.getEmployeeId())
                 .orElseThrow(() -> new NotFoundException("users not found"));
-        contract.setUsers(users);
+        contract.setEmployee(employee);
         final List<Profile> profile = profileRepository.findAllById(
                 contractDTO.getProfile() == null ? List.of() : contractDTO.getProfile());
         if (profile.size() != (contractDTO.getProfile() == null ? 0 : contractDTO.getProfile().size())) {
