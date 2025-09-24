@@ -5,6 +5,9 @@ import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectDTO;
+import ie3.i_e3_backend.model.Enums.ProjectStatus;
+import ie3.i_e3_backend.model.Enums.Role;
+import ie3.i_e3_backend.repos.AlocationRepository;
 import ie3.i_e3_backend.repos.ContractRepository;
 import ie3.i_e3_backend.repos.ProjectRepository;
 import ie3.i_e3_backend.util.NotFoundException;
@@ -17,8 +20,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -27,10 +29,12 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ContractRepository contractRepository;
+    private final AlocationRepository alocationRepository;
 
-    public ProjectService(final ProjectRepository projectRepository, final ContractRepository contractRepository) {
+    public ProjectService(final ProjectRepository projectRepository, final ContractRepository contractRepository, final AlocationRepository alocationRepository) {
         this.projectRepository = projectRepository;
         this.contractRepository = contractRepository;
+        this.alocationRepository = alocationRepository;
     }
 
     public List<ProjectDTO> findAll() {
@@ -145,6 +149,23 @@ public class ProjectService {
 
         double hoursPerDay = weeklyHours / 5.0;
         return hoursPerDay * workingDays;
+    }
+
+    private ProjectStatus getProjectStatus(Project project) {
+        OffsetDateTime now = OffsetDateTime.now();
+
+        if (project.getEndDate().isBefore(now)) {
+            return ProjectStatus.COMPLETED;
+        }
+
+        return ProjectStatus.UNAVALIABLE;
+    }
+
+    private boolean checkProjectRoles(Long projectId) {
+        List<Role> projectRoles = alocationRepository.findRolesByProjectId(projectId);
+        Set<Role> roleSet = new HashSet<>(projectRoles);
+
+        return roleSet.containsAll(List.of(Role.DEV, Role.SECURITY, Role.QA, Role.MANAGER));
     }
 
     private ProjectDTO mapToDTO(final Project project, final ProjectDTO projectDTO) {
