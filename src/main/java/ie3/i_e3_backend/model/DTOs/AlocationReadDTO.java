@@ -4,7 +4,7 @@ import ie3.i_e3_backend.model.Enums.Role;
 import jakarta.validation.constraints.NotNull;
 
 
-public class AlocationDTO {
+public class AlocationReadDTO {
 
     private Long id;
 
@@ -16,7 +16,10 @@ public class AlocationDTO {
 
     private Long employee;
 
+    private String employeeName;
+
     private Long project;
+    private String projectName;
 
     public Long getId() {
         return id;
@@ -57,4 +60,12 @@ public class AlocationDTO {
     public void setProject(final Long project) {
         this.project = project;
     }
+
+    public String getEmployeeName() { return employeeName; }
+
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
+
+    public String getProjectName() { return projectName; }
+
+    public void setProjectName(String projectName) { this.projectName = projectName; }
 }

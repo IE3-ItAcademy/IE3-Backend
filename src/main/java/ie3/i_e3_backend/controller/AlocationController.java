@@ -1,6 +1,7 @@
 package ie3.i_e3_backend.controller;
 
 import ie3.i_e3_backend.model.DTOs.AlocationDTO;
+import ie3.i_e3_backend.model.DTOs.AlocationReadDTO;
 import ie3.i_e3_backend.service.AlocationService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -27,12 +28,12 @@ public class AlocationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AlocationDTO>> getAllAlocations() {
+    public ResponseEntity<List<AlocationReadDTO>> getAllAlocations() {
         return ResponseEntity.ok(alocationService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlocationDTO> getAlocation(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<AlocationReadDTO> getAlocation(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(alocationService.get(id));
     }
 
