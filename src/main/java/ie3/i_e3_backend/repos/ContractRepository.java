@@ -20,4 +20,15 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
             "AND :now BETWEEN c.startDate AND c.endDate " +
             "ORDER BY c.startDate DESC")
     Optional<Contract> findTopActiveContractByEmployeeId(@Param("employeeId") Long employeeId, @Param("now") OffsetDateTime now);
+
+    @Query("SELECT c FROM Contract c " +
+            "WHERE c.employee.id = :employeeId " +
+            "AND c.endDate >= :periodStart " +
+            "AND c.startDate <= :periodEnd")
+    List<Contract> findAllByEmployeeIdAndDateRange(
+            @Param("employeeId") Long employeeId,
+            @Param("periodStart") OffsetDateTime periodStart,
+            @Param("periodEnd") OffsetDateTime periodEnd
+    );
+
 }
