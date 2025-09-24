@@ -2,6 +2,7 @@ package ie3.i_e3_backend.controller;
 
 import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectDTO;
+import ie3.i_e3_backend.model.DTOs.ProjectReadDTO;
 import ie3.i_e3_backend.service.ProjectService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -28,12 +29,12 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectDTO>> getAllProjects() {
+    public ResponseEntity<List<ProjectReadDTO>> getAllProjects() {
         return ResponseEntity.ok(projectService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectDTO> getProject(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<ProjectReadDTO> getProject(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(projectService.get(id));
     }
 

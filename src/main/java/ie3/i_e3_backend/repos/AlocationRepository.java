@@ -27,6 +27,6 @@ public interface AlocationRepository extends JpaRepository<Alocation, Long> {
 
     List<Alocation> findByProjectId(Long projectId);
 
-    @Query("SELECT a.employeeRole FROM Allocation a WHERE a.project.id = :projectId")
+    @Query("SELECT a.employeeRole FROM Alocation a WHERE a.project.id = :projectId")
     List<Role> findRolesByProjectId(@Param("projectId") Long projectId);
 }

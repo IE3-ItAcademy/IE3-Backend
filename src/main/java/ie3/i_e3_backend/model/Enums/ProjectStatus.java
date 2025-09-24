@@ -1,8 +1,8 @@
 package ie3.i_e3_backend.model.Enums;
 
 public enum ProjectStatus {
-    AVALIABLE,
-    UNAVALIABLE,
+    AVAILABLE,
+    UNAVAILABLE,
     PLANNED,
     COMPLETED
 }

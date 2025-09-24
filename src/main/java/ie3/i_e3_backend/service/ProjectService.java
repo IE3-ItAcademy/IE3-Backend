@@ -5,6 +5,7 @@ import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectDTO;
+import ie3.i_e3_backend.model.DTOs.ProjectReadDTO;
 import ie3.i_e3_backend.model.Enums.ProjectStatus;
 import ie3.i_e3_backend.model.Enums.Role;
 import ie3.i_e3_backend.repos.AlocationRepository;
@@ -37,16 +38,16 @@ public class ProjectService {
         this.alocationRepository = alocationRepository;
     }
 
-    public List<ProjectDTO> findAll() {
+    public List<ProjectReadDTO> findAll() {
         final List<Project> projects = projectRepository.findAll(Sort.by("id"));
         return projects.stream()
-                .map(project -> mapToDTO(project, new ProjectDTO()))
+                .map(project -> mapToDTO(project, new ProjectReadDTO()))
                 .toList();
     }
 
-    public ProjectDTO get(final Long id) {
+    public ProjectReadDTO get(final Long id) {
         return projectRepository.findById(id)
-                .map(project -> mapToDTO(project, new ProjectDTO()))
+                .map(project -> mapToDTO(project, new ProjectReadDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
@@ -156,9 +157,13 @@ public class ProjectService {
 
         if (project.getEndDate().isBefore(now)) {
             return ProjectStatus.COMPLETED;
+        } else if (project.getStartDate().isAfter(now)) {
+            return ProjectStatus.PLANNED;
+        } else if (checkProjectRoles(project.getId())) {
+            return ProjectStatus.AVAILABLE;
         }
 
-        return ProjectStatus.UNAVALIABLE;
+        return ProjectStatus.UNAVAILABLE;
     }
 
     private boolean checkProjectRoles(Long projectId) {
@@ -168,13 +173,14 @@ public class ProjectService {
         return roleSet.containsAll(List.of(Role.DEV, Role.SECURITY, Role.QA, Role.MANAGER));
     }
 
-    private ProjectDTO mapToDTO(final Project project, final ProjectDTO projectDTO) {
-        projectDTO.setId(project.getId());
-        projectDTO.setName(project.getName());
-        projectDTO.setStartDate(project.getStartDate());
-        projectDTO.setEndDate(project.getEndDate());
-        projectDTO.setDescription(project.getDescription());
-        return projectDTO;
+    private ProjectReadDTO mapToDTO(final Project project, final ProjectReadDTO projectReadDTO) {
+        projectReadDTO.setId(project.getId());
+        projectReadDTO.setName(project.getName());
+        projectReadDTO.setStartDate(project.getStartDate());
+        projectReadDTO.setEndDate(project.getEndDate());
+        projectReadDTO.setDescription(project.getDescription());
+        projectReadDTO.setStatus(getProjectStatus(project));
+        return projectReadDTO;
     }
 
     private Project mapToEntity(final ProjectDTO projectDTO, final Project project) {
