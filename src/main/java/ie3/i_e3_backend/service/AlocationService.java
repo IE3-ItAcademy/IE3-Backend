@@ -43,6 +43,7 @@ public class AlocationService {
         this.contractRepository = contractRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<AlocationDTO> findAll() {
         final List<Alocation> alocations = alocationRepository.findAll(Sort.by("id"));
         return alocations.stream()
@@ -50,6 +51,7 @@ public class AlocationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public AlocationDTO get(final Long id) {
         return alocationRepository.findById(id)
                 .map(alocation -> mapToDTO(alocation, new AlocationDTO()))
@@ -170,7 +172,9 @@ public class AlocationService {
         alocationDTO.setWeeklyHours(alocation.getWeeklyHours());
         alocationDTO.setEmployeeRole(alocation.getEmployeeRole());
         alocationDTO.setEmployee(alocation.getEmployee() == null ? null : alocation.getEmployee().getId());
+        alocationDTO.setEmployeeName(alocation.getEmployee().getName());
         alocationDTO.setProject(alocation.getProject() == null ? null : alocation.getProject().getId());
+        alocationDTO.setProjectName(alocation.getProject().getName());
         return alocationDTO;
     }
 

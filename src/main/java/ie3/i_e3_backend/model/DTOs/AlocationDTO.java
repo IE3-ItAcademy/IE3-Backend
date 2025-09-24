@@ -16,7 +16,10 @@ public class AlocationDTO {
 
     private Long employee;
 
+    private String employeeName;
+
     private Long project;
+    private String projectName;
 
     public Long getId() {
         return id;
@@ -58,4 +61,11 @@ public class AlocationDTO {
         this.project = project;
     }
 
+    public String getEmployeeName() { return employeeName; }
+
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
+
+    public String getProjectName() { return projectName; }
+
+    public void setProjectName(String projectName) { this.projectName = projectName; }
 }
