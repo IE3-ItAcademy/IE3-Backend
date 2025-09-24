@@ -8,15 +8,12 @@ import jakarta.validation.Valid;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -40,7 +37,15 @@ public class ProjectController {
     }
 
     @GetMapping("/cost/{id}")
-    public ResponseEntity<ProjectCostDTO> getProjectCost(@PathVariable(name = "id") final Long id, @PathVariable final OffsetDateTime startDate, @PathVariable final OffsetDateTime endDate) {
+    public ResponseEntity<ProjectCostDTO> getProjectCost(
+            @PathVariable(name = "id") final Long id,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            OffsetDateTime startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            OffsetDateTime endDate
+    ) {
         return ResponseEntity.ok(projectService.getCost(id, startDate, endDate));
     }
 
