@@ -5,6 +5,7 @@ import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectDTO;
+import ie3.i_e3_backend.model.DTOs.ProjectModalDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectReadDTO;
 import ie3.i_e3_backend.model.Enums.ProjectStatus;
 import ie3.i_e3_backend.model.Enums.Role;
@@ -19,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -55,6 +54,13 @@ public class ProjectService {
         final Project project = new Project();
         mapToEntity(projectDTO, project);
         return projectRepository.save(project).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public ProjectModalDTO getModal(final Long id, OffsetDateTime startDate, OffsetDateTime endDate) {
+        return projectRepository.findById(id)
+                .map(project -> mapToModalDTO(project, new ProjectModalDTO(), startDate, endDate))
+                .orElseThrow(NotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -175,7 +181,7 @@ public class ProjectService {
         List<Role> projectRoles = alocationRepository.findRolesByProjectId(projectId);
         Set<Role> roleSet = new HashSet<>(projectRoles);
 
-        return roleSet.containsAll(List.of(Role.DEV, Role.SECURITY, Role.QA, Role.MANAGER));
+        return roleSet.containsAll(List.of(Role.DEV, Role.QA, Role.MANAGER));
     }
 
     private ProjectReadDTO mapToDTO(final Project project, final ProjectReadDTO projectReadDTO) {
@@ -186,6 +192,33 @@ public class ProjectService {
         projectReadDTO.setDescription(project.getDescription());
         projectReadDTO.setStatus(getProjectStatus(project));
         return projectReadDTO;
+    }
+
+    private ProjectModalDTO mapToModalDTO(final Project project, final ProjectModalDTO projectModalDTO, OffsetDateTime startDate, OffsetDateTime endDate) {
+        projectModalDTO.setName(project.getName());
+        projectModalDTO.setStatus(getProjectStatus(project));
+        projectModalDTO.setDescription(project.getDescription());
+        projectModalDTO.setStartDate(project.getStartDate());
+        projectModalDTO.setEndDate(project.getEndDate());
+
+        ProjectCostDTO projectCostDTO = new ProjectCostDTO();
+        projectCostDTO.setTotalCost(totalProjectCost(project.getId()));
+
+        if (startDate != null && endDate != null) {
+            projectCostDTO.setTotalCostPerPeriod(periodTotalCost(project.getId(), startDate, endDate));
+        } else {
+            projectCostDTO.setTotalCostPerPeriod(periodTotalCost(project.getId(), project.getStartDate(), project.getEndDate()));
+        }
+
+        Set<String> uniqueEmployeeNames = project.getAlocations().stream()
+                .map(alocation -> alocation.getEmployee().getName())
+                .collect(Collectors.toSet());
+
+        projectModalDTO.setCosts(projectCostDTO);
+
+        projectModalDTO.setEmployees(uniqueEmployeeNames);
+
+        return projectModalDTO;
     }
 
     private Project mapToEntity(final ProjectDTO projectDTO, final Project project) {

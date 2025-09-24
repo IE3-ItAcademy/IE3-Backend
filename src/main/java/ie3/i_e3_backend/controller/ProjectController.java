@@ -2,6 +2,7 @@ package ie3.i_e3_backend.controller;
 
 import ie3.i_e3_backend.model.DTOs.ProjectCostDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectDTO;
+import ie3.i_e3_backend.model.DTOs.ProjectModalDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectReadDTO;
 import ie3.i_e3_backend.service.ProjectService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,6 +49,19 @@ public class ProjectController {
             OffsetDateTime endDate
     ) {
         return ResponseEntity.ok(projectService.getCost(id, startDate, endDate));
+    }
+
+    @GetMapping("/modal/{id}")
+    public ResponseEntity<ProjectModalDTO> getProjectModal(
+            @PathVariable(name = "id") final Long id,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            OffsetDateTime startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            OffsetDateTime endDate
+    ) {
+        return ResponseEntity.ok(projectService.getModal(id, startDate, endDate));
     }
 
     @PostMapping
