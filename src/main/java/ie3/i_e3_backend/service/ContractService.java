@@ -4,6 +4,7 @@ import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Employee;
 import ie3.i_e3_backend.domain.Profile;
 import ie3.i_e3_backend.model.DTOs.ContractDTO;
+import ie3.i_e3_backend.model.DTOs.ContractReadDTO;
 import ie3.i_e3_backend.repos.ContractRepository;
 import ie3.i_e3_backend.repos.EmployeeRepository;
 import ie3.i_e3_backend.repos.ProfileRepository;
@@ -32,16 +33,16 @@ public class ContractService {
         this.profileRepository = profileRepository;
     }
 
-    public List<ContractDTO> findAll() {
+    public List<ContractReadDTO> findAll() {
         final List<Contract> contracts = contractRepository.findAll(Sort.by("id"));
         return contracts.stream()
-                .map(contract -> mapToDTO(contract, new ContractDTO()))
+                .map(contract -> mapToDTO(contract, new ContractReadDTO()))
                 .toList();
     }
 
-    public ContractDTO get(final Long id) {
+    public ContractReadDTO get(final Long id) {
         return contractRepository.findById(id)
-                .map(contract -> mapToDTO(contract, new ContractDTO()))
+                .map(contract -> mapToDTO(contract, new ContractReadDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
@@ -51,19 +52,19 @@ public class ContractService {
         return contractRepository.save(contract).getId();
     }
 
-    private ContractDTO mapToDTO(final Contract contract, final ContractDTO contractDTO) {
-        contractDTO.setId(contract.getId());
-        contractDTO.setEmployeeName(contract.getEmployee().getName());
-        contractDTO.setStartDate(contract.getStartDate());
-        contractDTO.setEndDate(contract.getEndDate());
-        contractDTO.setWeeklyHours(contract.getWeeklyHours());
-        contractDTO.setWageByHour(contract.getWageByHour());
-        contractDTO.setEmployeeName(contract.getEmployee().getName());
-        contractDTO.setEmployeeId(contract.getEmployee().getId());
-        contractDTO.setProfile(contract.getProfile().stream()
+    private ContractReadDTO mapToDTO(final Contract contract, final ContractReadDTO contractReadDTO) {
+        contractReadDTO.setId(contract.getId());
+        contractReadDTO.setEmployeeName(contract.getEmployee().getName());
+        contractReadDTO.setStartDate(contract.getStartDate());
+        contractReadDTO.setEndDate(contract.getEndDate());
+        contractReadDTO.setWeeklyHours(contract.getWeeklyHours());
+        contractReadDTO.setWageByHour(contract.getWageByHour());
+        contractReadDTO.setEmployeeName(contract.getEmployee().getName());
+        contractReadDTO.setEmployeeId(contract.getEmployee().getId());
+        contractReadDTO.setProfile(contract.getProfile().stream()
                 .map(profile -> profile.getId())
                 .toList());
-        return contractDTO;
+        return contractReadDTO;
     }
 
     private Contract mapToEntity(final ContractDTO contractDTO, final Contract contract) {
