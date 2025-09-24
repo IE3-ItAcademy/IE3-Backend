@@ -8,6 +8,9 @@ import java.util.List;
 public class ContractDTO {
 
     private Long id;
+    // Employee Name
+    @NotNull
+    private String name;
 
     @NotNull
     private OffsetDateTime startDate;
