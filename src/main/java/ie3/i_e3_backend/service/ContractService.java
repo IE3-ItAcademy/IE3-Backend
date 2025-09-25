@@ -68,12 +68,12 @@ public class ContractService {
 
     private ContractReadDTO mapToDTO(final Contract contract, final ContractReadDTO contractReadDTO) {
         contractReadDTO.setId(contract.getId());
-        contractReadDTO.setEmployeeName(contract.getEmployee().getName());
+        contractReadDTO.setName(contract.getEmployee().getName());
         contractReadDTO.setStartDate(contract.getStartDate());
         contractReadDTO.setEndDate(contract.getEndDate());
         contractReadDTO.setWeeklyHours(contract.getWeeklyHours());
         contractReadDTO.setWageByHour(contract.getWageByHour());
-        contractReadDTO.setEmployeeName(contract.getEmployee().getName());
+        contractReadDTO.setName(contract.getEmployee().getName());
         contractReadDTO.setEmployeeId(contract.getEmployee().getId());
         contractReadDTO.setActiveContract(getContractStatus(contract));
         contractReadDTO.setProfile(contract.getProfile().stream()

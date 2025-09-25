@@ -24,8 +24,9 @@ public class ContractReadDTO {
     @NotNull
     private Long employeeId;
 
+    // Employee Name
     @NotNull
-    private String employeeName;
+    private String name;
 
     private List<Long> profile;
 
@@ -71,12 +72,12 @@ public class ContractReadDTO {
         this.wageByHour = wageByHour;
     }
 
-    public String getEmployeeName() {
-        return employeeName;
+    public String getName() {
+        return name;
     }
 
-    public void setEmployeeName(final String employeeName) {
-        this.employeeName = employeeName;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     public Long getEmployeeId() { return employeeId; }
