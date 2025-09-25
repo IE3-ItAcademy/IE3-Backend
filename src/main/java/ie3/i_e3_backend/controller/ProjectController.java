@@ -63,6 +63,14 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getModal(id, startDate, endDate));
     }
 
+    @GetMapping("/dateRange")
+    public ResponseEntity<List<ProjectReadDTO>> getContractsByDateRange(
+            @RequestParam("startDate") OffsetDateTime startDate,
+            @RequestParam("endDate") OffsetDateTime endDate) {
+
+        return ResponseEntity.ok(projectService.findAllByDateRange(startDate, endDate)) ;
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createProject(@RequestBody @Valid final ProjectDTO projectDTO) {

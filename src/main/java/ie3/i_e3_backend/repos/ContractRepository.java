@@ -31,4 +31,9 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
             @Param("periodEnd") OffsetDateTime periodEnd
     );
 
+    @Query("SELECT c FROM Contract c " +
+            "WHERE c.startDate <= :periodEnd " +
+            "AND c.endDate >= :periodStart")
+    List<Contract> findAllByDateRange(@Param("periodStart") OffsetDateTime periodStart,
+                                      @Param("periodEnd") OffsetDateTime periodEnd);
 }
