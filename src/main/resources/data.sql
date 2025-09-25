@@ -12,7 +12,16 @@ INSERT INTO Employees (id, name) VALUES
                                      (2, 'Fernando Gazzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'),
                                      (3, 'Lucas Murakami'),
                                      (4, 'Matheus Boff'),
-                                     (5, 'Gabriel Velloso');
+                                     (5, 'Eduarda Contudo'),
+                                     (6, 'Eduarda Gotuzzo'),
+                                     (7,  'Julia Tiethbol'),
+                                     (8, 'Ellen'),
+                                     (9, 'Henrique Schultz'),
+                                     (10, 'Gustavo Teixeira'),
+                                     (11, 'Rafa Vaccaro'),
+                                     (12, 'Nicholas'),
+                                     (13, 'Marina Acosta'),
+                                     (14, 'Gabriel Velloso');
 
 
 -- =================================================================================
@@ -66,9 +75,13 @@ INSERT INTO Contracts (id, start_date, end_date, weekly_hours, wage_by_hour, emp
 (3, '2024-07-01 09:00:00-03', '2025-12-31 18:00:00-03', 35, 68.75, 3), -- Lucas Murakami (DEV)
 (4, '2025-01-15 09:00:00-03', '2026-01-14 18:00:00-03', 40, 75.50, 4), -- Matheus Boff (Security)
 -- Expired contract for Gabriel Velloso, corresponding to the completed project.
-(5, '2024-05-01 09:00:00-03', '2025-02-28 18:00:00-03', 40, 78.25, 5),
+(5, '2024-05-01 09:00:00-03', '2025-02-28 18:00:00-03', 40, 78.25, 14),
 -- Gabriel Velloso's current, active contract.
-(6, '2025-03-01 09:00:00-03', '2026-02-27 18:00:00-03', 40, 85.00, 5);
+(6, '2025-03-01 09:00:00-03', '2026-02-27 18:00:00-03', 40, 85.00, 14),
+
+(7, '2025-03-01 09:00:00-03', '2026-02-27 18:00:00-03', 40, 15.00, 6),
+(8, '2025-03-01 09:00:00-03', '2026-02-27 18:00:00-03', 40, 15.00, 7),
+(9, '2025-03-01 09:00:00-03', '2026-02-27 18:00:00-03', 40, 15.00, 8);
 
 
 -- =================================================================================
@@ -93,7 +106,7 @@ INSERT INTO Employee_Roles (contract_Id, profile_Id) VALUES
 INSERT INTO Alocations (id, weekly_hours, employee_role, employee_id, project_id) VALUES
 -- Project 1: Website Institucional (Completed)
 (1, 10, 'MANAGER', 1, 1),
-(2, 40, 'DEV', 5, 1),
+(2, 40, 'DEV', 14, 1),
 (3, 10, 'QA', 2, 1),
 
 -- Project 4: Aplicativo de Logística Interna (Completed)
@@ -104,7 +117,7 @@ INSERT INTO Alocations (id, weekly_hours, employee_role, employee_id, project_id
 -- Project 2: Sistema de Gestão de Clientes (SGC) (Ongoing)
 (7, 10, 'MANAGER', 1, 2),
 (8, 35, 'DEV', 3, 2),
-(9, 40, 'DEV', 5, 2),
+(9, 40, 'DEV', 14, 2),
 (10, 10, 'QA', 2, 2),
 
 -- Project 3: Plataforma E-commerce B2B (Ongoing)
@@ -115,19 +128,22 @@ INSERT INTO Alocations (id, weekly_hours, employee_role, employee_id, project_id
 
 -- Project 5: Atualização de Segurança de Dados (LGPD) (Ongoing)
 (15, 10, 'MANAGER', 1, 5),
-(16, 20, 'DEV', 5, 5),
+(16, 20, 'DEV', 14, 5),
 (17, 20, 'QA', 2, 5),
 (18, 20, 'SECURITY', 4, 5),
 
 -- Project 6: Migração para Nuvem AWS (Future)
 (19, 10, 'MANAGER', 1, 6),
-(20, 20, 'DEV', 5, 6),
+(20, 20, 'DEV', 14, 6),
 (21, 20, 'QA', 2, 6),
 (22, 20, 'SECURITY', 4, 6),
 
 -- Project 7: Dashboard de Business Intelligence (BI) (Future)
 (23, 10, 'MANAGER', 1, 7),
-(24, 20, 'DEV', 5, 7),
+(24, 20, 'DEV', 14, 7),
 (25, 20, 'QA', 2, 7),
-(26, 20, 'SECURITY', 4, 7);
+(26, 20, 'DEV', 6, 7),
+(27, 20, 'DEV', 7, 7),
+(28, 20, 'DEV', 8, 7),
+(29, 20, 'SECURITY', 4, 7);
 
