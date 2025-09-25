@@ -37,7 +37,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.get(id));
     }
 
-    @GetMapping("/details/{id}")
+    @GetMapping("/modal/{id}")
     public ResponseEntity<EmployeeModalDTO> getEmployeeDetails(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeDetails(id));
     }

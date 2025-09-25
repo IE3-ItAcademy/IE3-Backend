@@ -52,6 +52,12 @@ public class ProjectService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<ProjectReadDTO> findAllByDateRange(OffsetDateTime startDate, OffsetDateTime endDate) {
+        return projectRepository.findAllByDateRange(startDate, endDate).stream()
+                .map(project -> mapToDTO(project, new ProjectReadDTO()))
+                .toList();
+    }
+
     public Long create(final ProjectDTO projectDTO) {
         final Project project = new Project();
         mapToEntity(projectDTO, project);

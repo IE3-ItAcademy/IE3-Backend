@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -44,6 +45,12 @@ public class ContractService {
         return contractRepository.findById(id)
                 .map(contract -> mapToDTO(contract, new ContractReadDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public List<ContractReadDTO> findAllByDateRange(OffsetDateTime startDate, OffsetDateTime endDate) {
+        return contractRepository.findAllByDateRange(startDate, endDate).stream()
+                .map(contract -> mapToDTO(contract, new ContractReadDTO()))
+                .toList();
     }
 
     public Long create(final ContractDTO contractDTO) {
