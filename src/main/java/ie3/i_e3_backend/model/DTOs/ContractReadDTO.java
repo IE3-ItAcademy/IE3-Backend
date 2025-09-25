@@ -29,6 +29,8 @@ public class ContractReadDTO {
 
     private List<Long> profile;
 
+    private boolean activeContract;
+
     public Long getId() {
         return id;
     }
@@ -89,4 +91,11 @@ public class ContractReadDTO {
         this.profile = profile;
     }
 
+    public boolean isActiveContract() {
+        return activeContract;
+    }
+
+    public void setActiveContract(boolean activeContract) {
+        this.activeContract = activeContract;
+    }
 }
