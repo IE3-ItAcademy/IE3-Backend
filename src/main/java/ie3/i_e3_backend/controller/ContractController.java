@@ -5,13 +5,14 @@ import ie3.i_e3_backend.model.DTOs.ContractReadDTO;
 import ie3.i_e3_backend.service.ContractService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-
-import java.time.OffsetDateTime;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.List;
 
 
 @RestController
@@ -36,10 +37,11 @@ public class ContractController {
 
     @GetMapping("/dateRange")
     public ResponseEntity<List<ContractReadDTO>> getContractsByDateRange(
-            @RequestParam("startDate") OffsetDateTime startDate,
-            @RequestParam("endDate") OffsetDateTime endDate) {
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate) {
 
-        return ResponseEntity.ok(contractService.findAllByDateRange(startDate, endDate)) ;
+        return ResponseEntity.ok(contractService.findAllByDateRange(startDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00"))
+                , endDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00")))) ;
     }
 
     @PostMapping

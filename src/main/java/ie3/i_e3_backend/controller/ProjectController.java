@@ -4,13 +4,14 @@ import ie3.i_e3_backend.model.DTOs.*;
 import ie3.i_e3_backend.service.ProjectService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 
@@ -41,34 +42,39 @@ public class ProjectController {
     public ResponseEntity<ProjectCostDTO> getProjectCost(
             @PathVariable(name = "id") final Long id,
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            OffsetDateTime startDate,
+            LocalDate startDate,
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            OffsetDateTime endDate
+            LocalDate endDate
     ) {
-        return ResponseEntity.ok(projectService.getCost(id, startDate, endDate));
+        return ResponseEntity.ok(projectService.getCost(id, OffsetDateTime.from(startDate), OffsetDateTime.from(endDate)));
     }
 
     @GetMapping("/modal/{id}")
     public ResponseEntity<ProjectModalDTO> getProjectModal(
             @PathVariable(name = "id") final Long id,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            OffsetDateTime startDate,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            OffsetDateTime endDate
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate
     ) {
-        return ResponseEntity.ok(projectService.getModal(id, startDate, endDate));
+        ZoneOffset zoneOffset = ZoneOffset.of("-03:00");
+
+        OffsetDateTime startDateTime = (startDate != null)
+                ? startDate.atStartOfDay().atOffset(zoneOffset)
+                : null;
+
+        OffsetDateTime endDateTime = (endDate != null)
+                ? endDate.atTime(23, 59, 59).atOffset(zoneOffset)
+                : null;
+
+        return ResponseEntity.ok(projectService.getModal(id, startDateTime, endDateTime));
     }
 
     @GetMapping("/dateRange")
     public ResponseEntity<List<ProjectReadDTO>> getContractsByDateRange(
-            @RequestParam("startDate") OffsetDateTime startDate,
-            @RequestParam("endDate") OffsetDateTime endDate) {
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate) {
 
-        return ResponseEntity.ok(projectService.findAllByDateRange(startDate, endDate)) ;
+        return ResponseEntity.ok(projectService.findAllByDateRange(startDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00"))
+                , endDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00")))) ;
     }
 
     @PostMapping
