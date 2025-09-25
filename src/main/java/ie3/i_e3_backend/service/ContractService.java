@@ -59,6 +59,13 @@ public class ContractService {
         return contractRepository.save(contract).getId();
     }
 
+    private boolean getContractStatus(Contract contract) {
+        return contractRepository
+                .findTopActiveContractByEmployeeId(contract.getEmployee().getId(), OffsetDateTime.now())
+                .map(activeContract -> activeContract.equals(contract))
+                .orElse(false);
+    }
+
     private ContractReadDTO mapToDTO(final Contract contract, final ContractReadDTO contractReadDTO) {
         contractReadDTO.setId(contract.getId());
         contractReadDTO.setEmployeeName(contract.getEmployee().getName());
@@ -68,6 +75,7 @@ public class ContractService {
         contractReadDTO.setWageByHour(contract.getWageByHour());
         contractReadDTO.setEmployeeName(contract.getEmployee().getName());
         contractReadDTO.setEmployeeId(contract.getEmployee().getId());
+        contractReadDTO.setActiveContract(getContractStatus(contract));
         contractReadDTO.setProfile(contract.getProfile().stream()
                 .map(profile -> profile.getId())
                 .toList());
