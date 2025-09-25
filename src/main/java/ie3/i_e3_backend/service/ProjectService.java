@@ -126,8 +126,23 @@ public class ProjectService {
             OffsetDateTime periodEnd
     ) {
         double totalCost = 0;
+
+        Project project = projectRepository.findById(alocation.getProject().getId())
+                .orElseThrow(NotFoundException::new);
+
+        LocalDate projectStartDate = project.getStartDate().toLocalDate();
+        LocalDate projectEndDate = project.getEndDate().toLocalDate();
+
         LocalDate currentDate = periodStart.toLocalDate();
         LocalDate endDate = periodEnd.toLocalDate();
+
+        if (currentDate.isBefore(projectStartDate)) {
+            currentDate = projectStartDate;
+        }
+
+        if (endDate.isAfter(projectEndDate)) {
+            endDate = projectEndDate;
+        }
 
         // 5 Business Day
         double dailyHours = alocation.getWeeklyHours() / 5.0;
