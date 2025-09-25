@@ -166,17 +166,9 @@ public class ProjectService {
     }
 
     public ProjectStatus getProjectStatus(Project project) {
-        OffsetDateTime now = OffsetDateTime.now();
-
-        if (project.getEndDate().isBefore(now)) {
-            return ProjectStatus.COMPLETED;
-        } else if (project.getStartDate().isAfter(now)) {
-            return ProjectStatus.PLANNED;
-        } else if (checkProjectRoles(project.getId())) {
-            return ProjectStatus.AVAILABLE;
-        }
-
-        return ProjectStatus.UNAVAILABLE;
+        boolean hasRoles = checkProjectRoles(project.getId());
+        
+        return ProjectStatus.evaluate(project, hasRoles);
     }
 
     private boolean checkProjectRoles(Long projectId) {
@@ -192,6 +184,7 @@ public class ProjectService {
         int completed = 0;
         int available = 0;
         int planned = 0;
+        int finished = 0;
         int unavailable = 0;
 
         for (Project project : projects) {
@@ -207,6 +200,9 @@ public class ProjectService {
                 case PLANNED:
                     planned++;
                     break;
+                case FINISHED:
+                    finished++;
+                    break;
                 case UNAVAILABLE:
                     unavailable++;
                     break;
@@ -217,6 +213,7 @@ public class ProjectService {
         projectCountStatusDTO.setCompletedProjectCount(completed);
         projectCountStatusDTO.setAvailableProjectCount(available);
         projectCountStatusDTO.setPlannedProjectCount(planned);
+        projectCountStatusDTO.setFinishedProjectCount(finished);
         projectCountStatusDTO.setUnavailableProjectCount(unavailable);
 
         return projectCountStatusDTO;

@@ -6,6 +6,7 @@ public class ProjectCountStatusDTO {
     private int completedProjectCount;
     private int availableProjectCount;
     private int plannedProjectCount;
+    private int finishedProjectCount;
     private int unavailableProjectCount;
 
     public int getTotalProjectCount() {
@@ -46,5 +47,13 @@ public class ProjectCountStatusDTO {
 
     public void setUnavailableProjectCount(int unavailableProjectCount) {
         this.unavailableProjectCount = unavailableProjectCount;
+    }
+
+    public int getFinishedProjectCount() {
+        return finishedProjectCount;
+    }
+
+    public void setFinishedProjectCount(int finishedProjectCount) {
+        this.finishedProjectCount = finishedProjectCount;
     }
 }

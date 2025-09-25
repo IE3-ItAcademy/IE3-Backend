@@ -40,7 +40,11 @@ INSERT INTO Projects (id, name, start_date, end_date, description) VALUES
 (5, 'Atualização de Segurança de Dados (LGPD)', '2025-05-10 09:00:00-03', '2026-02-20 18:00:00-03', 'Projeto para adequar todos os sistemas da empresa à Lei Geral de Proteção de Dados.'),
 -- Future Projects
 (6, 'Migração para Nuvem AWS', '2027-01-10 09:00:00-03', '2028-06-30 18:00:00-03', 'Migração completa da infraestrutura on-premise para a nuvem da Amazon Web Services.'),
-(7, 'Dashboard de Business Intelligence (BI)', '2026-03-01 09:00:00-03', '2026-09-30 18:00:00-03', 'Criação de painéis de BI para análise de dados de vendas e operações em tempo real.');
+(7, 'Dashboard de Business Intelligence (BI)', '2026-03-01 09:00:00-03', '2026-09-30 18:00:00-03', 'Criação de painéis de BI para análise de dados de vendas e operações em tempo real.'),
+-- No Team Projects
+(8, 'Implementação de Sistema ERP', '2022-10-15 09:00:00-03', '2023-05-31 18:00:00-03', 'Desenvolvimento e implantação de sistema ERP para integração dos processos financeiros, logísticos e administrativos.'),
+(9, 'Plataforma de E-commerce B2B - 2', '2025-08-15 09:00:00-03', '2026-09-30 18:00:00-03', 'Desenvolvimento de uma plataforma de comércio eletrônico voltada para clientes corporativos, com integração a sistemas de pagamento e logística.'),
+(10, 'Automação de Processos com RPA', '2027-07-01 09:00:00-03', '2027-12-15 18:00:00-03', 'Automatização de tarefas repetitivas utilizando Robotic Process Automation para aumentar a eficiência operacional.');
 
 
 -- =================================================================================
@@ -113,5 +117,17 @@ INSERT INTO Alocations (id, weekly_hours, employee_role, employee_id, project_id
 (15, 10, 'MANAGER', 1, 5),
 (16, 20, 'DEV', 5, 5),
 (17, 20, 'QA', 2, 5),
-(18, 20, 'SECURITY', 4, 5);
+(18, 20, 'SECURITY', 4, 5),
+
+-- Project 6: Migração para Nuvem AWS (Future)
+(19, 10, 'MANAGER', 1, 6),
+(20, 20, 'DEV', 5, 6),
+(21, 20, 'QA', 2, 6),
+(22, 20, 'SECURITY', 4, 6),
+
+-- Project 7: Dashboard de Business Intelligence (BI) (Future)
+(23, 10, 'MANAGER', 1, 7),
+(24, 20, 'DEV', 5, 7),
+(25, 20, 'QA', 2, 7),
+(26, 20, 'SECURITY', 4, 7);
 
