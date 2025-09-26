@@ -9,13 +9,13 @@
 -- =================================================================================
 INSERT INTO Employees (id, name) VALUES
                                      (1, 'Alberto Borsatto'),
-                                     (2, 'Fernando Gazzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'),
+                                     (2, 'Fernando Gazzana'),
                                      (3, 'Lucas Murakami'),
                                      (4, 'Matheus Boff'),
                                      (5, 'Eduarda Contudo'),
                                      (6, 'Eduarda Gotuzzo'),
                                      (7,  'Julia Tiethbol'),
-                                     (8, 'Ellen'),
+                                     (8, 'Ellen Miranda'),
                                      (9, 'Henrique Schultz'),
                                      (10, 'Gustavo Teixeira'),
                                      (11, 'Rafa Vaccaro'),
