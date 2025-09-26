@@ -1,6 +1,7 @@
 package ie3.i_e3_backend.model.DTOs;
 
 public class EmployeeRoleCountDTO {
+    private int totalEmployeeCountWithActiveContracts;
     private int managerCount;
     private int devCount;
     private int qaCount;
@@ -8,6 +9,14 @@ public class EmployeeRoleCountDTO {
 
     public int getManagerCount() {
         return managerCount;
+    }
+
+    public int getTotalEmployeeCountWithActiveContracts() {
+        return totalEmployeeCountWithActiveContracts;
+    }
+
+    public void setTotalEmployeeCountWithActiveContracts(int totalEmployeeCountWithActiveContracts) {
+        this.totalEmployeeCountWithActiveContracts = totalEmployeeCountWithActiveContracts;
     }
 
     public void setManagerCount(int managerCount) {

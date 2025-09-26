@@ -118,6 +118,7 @@ public class EmployeeService {
     private EmployeeRoleCountDTO getEmployeeRoleCount(List<Employee> employees) {
         EmployeeRoleCountDTO employeeRoleCountDTO = new EmployeeRoleCountDTO();
 
+        int employeesCount = 0;
         int manager = 0;
         int dev = 0;
         int qa = 0;
@@ -131,21 +132,26 @@ public class EmployeeService {
                     switch (role) {
                         case MANAGER:
                             manager++;
+                            employeesCount++;
                             break;
                         case DEV:
                             dev++;
+                            employeesCount++;
                             break;
                         case QA:
                             qa++;
+                            employeesCount++;
                             break;
                         case SECURITY:
                             security++;
+                            employeesCount++;
                             break;
                     }
                 }
             }
         }
 
+        employeeRoleCountDTO.setTotalEmployeeCountWithActiveContracts(employeesCount);
         employeeRoleCountDTO.setManagerCount(manager);
         employeeRoleCountDTO.setDevCount(dev);
         employeeRoleCountDTO.setQaCount(qa);
