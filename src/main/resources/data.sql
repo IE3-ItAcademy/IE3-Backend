@@ -94,7 +94,10 @@ INSERT INTO Employee_Roles (contract_Id, profile_Id) VALUES
                                                          (3, 2), -- Lucas's contract -> DEV
                                                          (4, 4), -- Matheus's contract -> SECURITY
                                                          (5, 2), -- Gabriel's old contract -> DEV
-                                                         (6, 2); -- Gabriel's new contract -> DEV
+                                                         (6, 2), -- Gabriel's new contract -> DEV
+                                                         (7, 2),
+                                                         (8, 2),
+                                                         (9, 2);
 
 
 -- =================================================================================

@@ -1,11 +1,13 @@
 package ie3.i_e3_backend.service;
 
 import ie3.i_e3_backend.domain.Alocation;
+import ie3.i_e3_backend.domain.Contract;
 import ie3.i_e3_backend.domain.Employee;
 import ie3.i_e3_backend.domain.Project;
 import ie3.i_e3_backend.model.DTOs.EmployeeDTO;
 import ie3.i_e3_backend.model.DTOs.EmployeeModalDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectInfoDTO;
+import ie3.i_e3_backend.model.Enums.Role;
 import ie3.i_e3_backend.repos.ContractRepository;
 import ie3.i_e3_backend.repos.EmployeeRepository;
 import ie3.i_e3_backend.util.NotFoundException;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -57,7 +60,7 @@ public class EmployeeService {
         var currentContract = contractRepository.findTopActiveContractByEmployeeId(id, now)
                 .stream().findFirst().orElse(null);
 
-        return mapToModalDTO(employee, new EmployeeModalDTO(), currentContract != null);
+        return mapToModalDTO(employee, new EmployeeModalDTO(), currentContract);
     }
 
     public Long create(final EmployeeDTO employeeDTO) {
@@ -77,10 +80,19 @@ public class EmployeeService {
         return employee;
     }
 
-   private EmployeeModalDTO mapToModalDTO(final Employee employee, final EmployeeModalDTO employeeModalDTO, final boolean activeContract) {
+   private EmployeeModalDTO mapToModalDTO(final Employee employee, final EmployeeModalDTO employeeModalDTO, final Contract contract) {
         employeeModalDTO.setId(employee.getId());
         employeeModalDTO.setName(employee.getName());
-        employeeModalDTO.setActiveContract(activeContract);
+        employeeModalDTO.setActiveContract(contract != null);
+
+        List<Role> employeeRoles = new ArrayList<>();
+        if (contract != null) {
+           contract.getProfile().forEach(profile -> {
+                employeeRoles.add(profile.getRole());
+           });
+        }
+
+       employeeModalDTO.setRoles(employeeRoles);
 
         List<Project> projects = employee.getAlocations().stream().map(Alocation::getProject).toList();
         List<ProjectInfoDTO> projectsDTO = projects.stream()
