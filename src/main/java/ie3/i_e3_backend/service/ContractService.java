@@ -60,11 +60,12 @@ public class ContractService {
     }
 
     private boolean getContractStatus(Contract contract) {
-        return contractRepository
-                .findTopActiveContractByEmployeeId(contract.getEmployee().getId(), OffsetDateTime.now())
-                .map(activeContract -> activeContract.equals(contract))
-                .orElse(false);
+        List<Contract> activeContracts = contractRepository
+                .findTopActiveContractByEmployeeId(contract.getEmployee().getId(), OffsetDateTime.now());
+
+        return !activeContracts.isEmpty() && activeContracts.getFirst().equals(contract);
     }
+
 
     private ContractReadDTO mapToDTO(final Contract contract, final ContractReadDTO contractReadDTO) {
         contractReadDTO.setId(contract.getId());

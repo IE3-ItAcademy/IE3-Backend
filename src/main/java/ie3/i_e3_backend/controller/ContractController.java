@@ -27,6 +27,7 @@ public class ContractController {
 
     @GetMapping
     public ResponseEntity<List<ContractReadDTO>> getAllContracts() {
+
         return ResponseEntity.ok(contractService.findAll());
     }
 
