@@ -1,16 +1,13 @@
 package ie3.i_e3_backend.service;
 
-import ie3.i_e3_backend.domain.Alocation;
-import ie3.i_e3_backend.domain.Contract;
-import ie3.i_e3_backend.domain.Employee;
-import ie3.i_e3_backend.domain.Project;
+import ie3.i_e3_backend.domain.*;
 import ie3.i_e3_backend.model.DTOs.EmployeeDTO;
 import ie3.i_e3_backend.model.DTOs.EmployeeModalDTO;
+import ie3.i_e3_backend.model.DTOs.EmployeeRoleCountDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectInfoDTO;
 import ie3.i_e3_backend.model.Enums.Role;
 import ie3.i_e3_backend.repos.*;
 import ie3.i_e3_backend.util.NotFoundException;
-import ie3.i_e3_backend.util.OverAlocationException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -26,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static ie3.i_e3_backend.model.Enums.Role.*;
 
 
 @Service
@@ -59,6 +58,12 @@ public class EmployeeService {
         return employeeRepository.findById(id)
                 .map(employee -> mapToDTO(employee, new EmployeeDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeRoleCountDTO getEmployeeRoleCount() {
+        final List<Employee> employees = employeeRepository.findAll(Sort.by("id"));
+        return getEmployeeRoleCount(employees);
     }
 
     @Transactional(readOnly = true)
@@ -108,6 +113,45 @@ public class EmployeeService {
         final Employee employee = new Employee();
         mapToEntity(employeeDTO, employee);
         return employeeRepository.save(employee).getId();
+    }
+
+    private EmployeeRoleCountDTO getEmployeeRoleCount(List<Employee> employees) {
+        EmployeeRoleCountDTO employeeRoleCountDTO = new EmployeeRoleCountDTO();
+
+        int manager = 0;
+        int dev = 0;
+        int qa = 0;
+        int security = 0;
+
+        for (Employee employee : employees) {
+            for (Contract contract : employee.getContracts()) {
+                for (Profile profile : contract.getProfile()) {
+                    Role role = profile.getRole();
+
+                    switch (role) {
+                        case MANAGER:
+                            manager++;
+                            break;
+                        case DEV:
+                            dev++;
+                            break;
+                        case QA:
+                            qa++;
+                            break;
+                        case SECURITY:
+                            security++;
+                            break;
+                    }
+                }
+            }
+        }
+
+        employeeRoleCountDTO.setManagerCount(manager);
+        employeeRoleCountDTO.setDevCount(dev);
+        employeeRoleCountDTO.setQaCount(qa);
+        employeeRoleCountDTO.setSecurityCount(security);
+
+        return employeeRoleCountDTO;
     }
 
     private EmployeeDTO mapToDTO(final Employee employee, final EmployeeDTO employeeDTO) {
