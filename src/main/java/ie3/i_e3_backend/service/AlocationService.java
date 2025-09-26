@@ -70,6 +70,8 @@ public class AlocationService {
         validateNoOverAllocation(alocation);
         if (alocation.getEmployeeRole().equals(Role.MANAGER)) validateProjectManager(projectId);
 
+
+
         return alocationRepository.save(alocation).getId();
     }
 
