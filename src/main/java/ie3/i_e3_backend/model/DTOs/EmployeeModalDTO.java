@@ -1,11 +1,14 @@
 package ie3.i_e3_backend.model.DTOs;
 
+import ie3.i_e3_backend.model.Enums.Role;
+
 import java.util.List;
 
 public class EmployeeModalDTO {
     private Long id;
     private String name;
     private boolean activeContract;
+    private List<Role> roles;
     private List<ProjectInfoDTO> projectInfoList;
 
     public Long getId() {
@@ -39,4 +42,7 @@ public class EmployeeModalDTO {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<Role> getRoles() {return roles; }
+    public void setRoles(List<Role> roles) { this.roles = roles; };
 }
