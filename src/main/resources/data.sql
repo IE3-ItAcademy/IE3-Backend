@@ -19,7 +19,7 @@ INSERT INTO Employees (id, name) VALUES
                                      (9, 'Henrique Schultz'),
                                      (10, 'Gustavo Teixeira'),
                                      (11, 'Rafa Vaccaro'),
-                                     (12, 'Nicholas'),
+                                     (12, 'Nicholas Navarro'),
                                      (13, 'Marina Acosta'),
                                      (14, 'Gabriel Velloso');
 
