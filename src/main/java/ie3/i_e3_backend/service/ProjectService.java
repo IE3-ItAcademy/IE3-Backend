@@ -59,9 +59,12 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProjectReadDTO> findAllLessFinished() {
+    public List<ProjectReadDTO> findAllLessFinishedAndComplete() {
         return projectRepository.findAll(Sort.by("id")).stream()
-                .filter(project -> getProjectStatus(project) != ProjectStatus.FINISHED)
+                .filter(project -> {
+                    ProjectStatus status = getProjectStatus(project);
+                    return status != ProjectStatus.FINISHED && status != ProjectStatus.COMPLETED;
+                })
                 .map(project -> mapToDTO(project, new ProjectReadDTO()))
                 .toList();
     }

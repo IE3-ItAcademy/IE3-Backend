@@ -39,9 +39,9 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployeeDetails(id));
     }
 
-    @GetMapping("/getEmployeesWithWeeklyHoursForProject")
-    public  ResponseEntity<List<EmployeeModalDTO>> getEmployeesWithWeeklyHoursForProject(@RequestParam final LocalDate startDate, @RequestParam LocalDate endDate, @RequestParam final int weeklyHours) {
-        return ResponseEntity.ok(employeeService.getEmployeesWithWeeklyHoursForProject(startDate, endDate, weeklyHours));
+    @GetMapping("/getEmployeesWithWeeklyHoursForProject/{project_id}")
+    public  ResponseEntity<List<EmployeeModalDTO>> getEmployeesWithWeeklyHoursForProject(@PathVariable(name = "project_id") final long project_id, @RequestParam final int weeklyHours) {
+        return ResponseEntity.ok(employeeService.getEmployeesWithWeeklyHoursForProject(project_id, weeklyHours));
     }
 
     @PostMapping

@@ -34,7 +34,7 @@ public class ProjectController {
     public ResponseEntity<ProjectCountStatusDTO> getAllProjectsByStatus() {return ResponseEntity.ok(projectService.countByStatus()); }
 
     @GetMapping("/projectsLessFinished")
-    public ResponseEntity<List<ProjectReadDTO>> getAllProjectsLessFinished() { return ResponseEntity.ok(projectService.findAllLessFinished()); }
+    public ResponseEntity<List<ProjectReadDTO>> getAllProjectsLessFinishedAndComplete() { return ResponseEntity.ok(projectService.findAllLessFinishedAndComplete()); }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectReadDTO> getProject(@PathVariable(name = "id") final Long id) {

@@ -8,10 +8,7 @@ import ie3.i_e3_backend.model.DTOs.EmployeeDTO;
 import ie3.i_e3_backend.model.DTOs.EmployeeModalDTO;
 import ie3.i_e3_backend.model.DTOs.ProjectInfoDTO;
 import ie3.i_e3_backend.model.Enums.Role;
-import ie3.i_e3_backend.repos.AlocationRepository;
-import ie3.i_e3_backend.repos.ContractRepository;
-import ie3.i_e3_backend.repos.EmployeeRepository;
-import ie3.i_e3_backend.repos.ParametersRepository;
+import ie3.i_e3_backend.repos.*;
 import ie3.i_e3_backend.util.NotFoundException;
 import ie3.i_e3_backend.util.OverAlocationException;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,6 +23,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -36,14 +34,16 @@ public class EmployeeService {
     private final ParametersRepository parametersRepository;
     private final AlocationRepository alocationRepository;
     private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
 
-    public EmployeeService(final EmployeeRepository employeeRepository, ContractRepository contractRepository, ParametersRepository parametersRepository , AlocationRepository alocationRepository ,ProjectService projectService,
-                           final ApplicationEventPublisher publisher) {
+    public EmployeeService(final EmployeeRepository employeeRepository, ContractRepository contractRepository, ParametersRepository parametersRepository , AlocationRepository alocationRepository , ProjectService projectService,
+                           final ApplicationEventPublisher publisher, ProjectRepository projectRepository) {
         this.employeeRepository = employeeRepository;
         this.contractRepository = contractRepository;
         this.parametersRepository = parametersRepository;
         this.alocationRepository = alocationRepository;
         this.projectService = projectService;
+        this.projectRepository = projectRepository;
     }
 
     public List<EmployeeDTO> findAll() {
@@ -72,18 +72,28 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public List<EmployeeModalDTO> getEmployeesWithWeeklyHoursForProject( final LocalDate startDate, final LocalDate endDate, final int weeklyHours ) {
+    public List<EmployeeModalDTO> getEmployeesWithWeeklyHoursForProject(Long projectId, final int weeklyHours) {
+        Project project = projectRepository.findById(projectId).orElseThrow(NotFoundException::new);
+
         return employeeRepository.findAll(Sort.by("id")).stream()
-                .filter(employee -> isNotOverAllocated(employee.getId(), startDate, endDate, weeklyHours))
+                .filter(employee -> isNotOverAllocated(
+                        employee.getId(),
+                        project.getStartDate().toLocalDate(),
+                        project.getEndDate().toLocalDate(),
+                        weeklyHours)
+                )
                 .map(employee -> {
-                    Contract activeContract = employee.getContracts().stream()
-                            .filter(contract -> contract.getStartDate().toLocalDate().isBefore(endDate.plusDays(1)) &&
-                                    contract.getEndDate().toLocalDate().isAfter(startDate.minusDays(1)))
+                    Contract activeContract = contractRepository
+                            .findTopActiveContractByEmployeeId(employee.getId(), OffsetDateTime.now())
+                            .stream()
                             .findFirst()
                             .orElse(null);
 
-                    return mapToModalDTO(employee, new EmployeeModalDTO(), activeContract);
+                    return activeContract != null
+                            ? mapToModalDTO(employee, new EmployeeModalDTO(), activeContract)
+                            : null;
                 })
+                .filter(Objects::nonNull) // remove nulls from stream
                 .toList();
     }
 
