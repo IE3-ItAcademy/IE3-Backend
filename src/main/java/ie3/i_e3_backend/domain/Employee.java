@@ -26,8 +26,8 @@ public class Employee {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "contracts_id")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_id")
     private List<Contract> contracts;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

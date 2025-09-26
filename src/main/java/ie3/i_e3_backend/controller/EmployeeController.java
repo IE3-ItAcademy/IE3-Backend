@@ -2,6 +2,7 @@ package ie3.i_e3_backend.controller;
 
 import ie3.i_e3_backend.model.DTOs.EmployeeDTO;
 import ie3.i_e3_backend.model.DTOs.EmployeeModalDTO;
+import ie3.i_e3_backend.model.DTOs.EmployeeRoleCountDTO;
 import ie3.i_e3_backend.service.EmployeeService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -42,6 +43,11 @@ public class EmployeeController {
     @GetMapping("/getEmployeesWithWeeklyHoursForProject/{project_id}")
     public  ResponseEntity<List<EmployeeModalDTO>> getEmployeesWithWeeklyHoursForProject(@PathVariable(name = "project_id") final long project_id, @RequestParam final int weeklyHours) {
         return ResponseEntity.ok(employeeService.getEmployeesWithWeeklyHoursForProject(project_id, weeklyHours));
+    }
+
+    @GetMapping("/countByRoles")
+    public ResponseEntity<EmployeeRoleCountDTO> countByRoles() {
+        return ResponseEntity.ok(employeeService.getEmployeeRoleCount());
     }
 
     @PostMapping
