@@ -18,7 +18,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -52,8 +51,17 @@ public class ProjectService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Transactional(readOnly = true)
     public List<ProjectReadDTO> findAllByDateRange(OffsetDateTime startDate, OffsetDateTime endDate) {
         return projectRepository.findAllByDateRange(startDate, endDate).stream()
+                .map(project -> mapToDTO(project, new ProjectReadDTO()))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectReadDTO> findAllLessFinished() {
+        return projectRepository.findAll(Sort.by("id")).stream()
+                .filter(project -> getProjectStatus(project) != ProjectStatus.FINISHED)
                 .map(project -> mapToDTO(project, new ProjectReadDTO()))
                 .toList();
     }
@@ -266,13 +274,15 @@ public class ProjectService {
             projectCostDTO.setTotalCostPerPeriod(periodTotalCost(project.getId(), project.getStartDate(), project.getEndDate()));
         }
 
-        Set<String> uniqueEmployeeNames = project.getAlocations().stream()
-                .map(alocation -> alocation.getEmployee().getName())
-                .collect(Collectors.toSet());
-
         projectModalDTO.setCosts(projectCostDTO);
 
-        projectModalDTO.setEmployees(uniqueEmployeeNames);
+        Map<String, Role> employees = new HashMap<>();
+
+        for (Alocation alocation : project.getAlocations()) {
+            employees.put(alocation.getEmployee().getName(), alocation.getEmployeeRole());
+        }
+
+        projectModalDTO.setEmployees(employees);
 
         return projectModalDTO;
     }

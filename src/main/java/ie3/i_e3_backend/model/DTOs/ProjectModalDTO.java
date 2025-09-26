@@ -1,11 +1,11 @@
 package ie3.i_e3_backend.model.DTOs;
 
 import ie3.i_e3_backend.model.Enums.ProjectStatus;
+import ie3.i_e3_backend.model.Enums.Role;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class ProjectModalDTO {
     private String name;
@@ -20,7 +20,7 @@ public class ProjectModalDTO {
 
     private ProjectCostDTO costs;
 
-    private Set<String> employees;
+    private Map<String, Role> employees;
 
     public String getName() {
         return name;
@@ -70,11 +70,9 @@ public class ProjectModalDTO {
         this.costs = costs;
     }
 
-    public Set<String> getEmployees() {
+    public Map<String, Role> getEmployees() {
         return employees;
     }
 
-    public void setEmployees(Set<String> employees) {
-        this.employees = employees;
-    }
+    public void setEmployees(Map<String, Role> employees) { this.employees = employees; }
 }
