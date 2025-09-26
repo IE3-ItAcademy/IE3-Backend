@@ -157,7 +157,7 @@ public class EmployeeService {
             double existingHoursThisWeek = 0;
 
             for (Alocation existingAllocation : overlappingAllocations) {
-                existingHoursThisWeek += getProratedHoursForWeek(startDate, endDate, weekHours, weekIterator);
+                existingHoursThisWeek += getProratedHoursForWeek(startDate, endDate, existingAllocation.getWeeklyHours(), weekIterator);
             }
 
             double newAllocationHoursThisWeek = getProratedHoursForWeek(startDate, endDate, weekHours, weekIterator);
