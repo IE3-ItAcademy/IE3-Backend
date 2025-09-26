@@ -5,16 +5,13 @@ import ie3.i_e3_backend.model.DTOs.EmployeeModalDTO;
 import ie3.i_e3_backend.service.EmployeeService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -40,6 +37,11 @@ public class EmployeeController {
     @GetMapping("/modal/{id}")
     public ResponseEntity<EmployeeModalDTO> getEmployeeDetails(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeDetails(id));
+    }
+
+    @GetMapping("/getEmployeesWithWeeklyHoursForProject")
+    public  ResponseEntity<List<EmployeeModalDTO>> getEmployeesWithWeeklyHoursForProject(@RequestParam final LocalDate startDate, @RequestParam LocalDate endDate, @RequestParam final int weeklyHours) {
+        return ResponseEntity.ok(employeeService.getEmployeesWithWeeklyHoursForProject(startDate, endDate, weeklyHours));
     }
 
     @PostMapping
