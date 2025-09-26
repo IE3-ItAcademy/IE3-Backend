@@ -24,6 +24,8 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -75,7 +77,12 @@ public class EmployeeService {
     public List<EmployeeModalDTO> getEmployeesWithWeeklyHoursForProject(Long projectId, final int weeklyHours) {
         Project project = projectRepository.findById(projectId).orElseThrow(NotFoundException::new);
 
+        Set<Long> allocatedEmployeeIds = project.getAlocations().stream()
+                .map(alocation -> alocation.getEmployee().getId())
+                .collect(Collectors.toSet());
+
         return employeeRepository.findAll(Sort.by("id")).stream()
+                .filter(employee -> !allocatedEmployeeIds.contains(employee.getId()))
                 .filter(employee -> isNotOverAllocated(
                         employee.getId(),
                         project.getStartDate().toLocalDate(),
@@ -93,7 +100,7 @@ public class EmployeeService {
                             ? mapToModalDTO(employee, new EmployeeModalDTO(), activeContract)
                             : null;
                 })
-                .filter(Objects::nonNull) // remove nulls from stream
+                .filter(Objects::nonNull)
                 .toList();
     }
 
